@@ -1,2 +1,2 @@
 # eQTL_Detector
-Pipeline for eQTL detection
+An automated pipeline for eQTL detection and _downstream analysis_
