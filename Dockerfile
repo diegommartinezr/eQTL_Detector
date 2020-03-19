@@ -5,7 +5,7 @@ COPY QTLtools.sh /QTLtools.sh
 RUN chmod u+x QTLtools.sh
 #Executing script
 RUN ["/QTLtools.sh"]
-#Execute R-package installation
+#Execute R-package installation and runing a script
 COPY install_packages.R /install_packages.R
 COPY script.R /script.R
 RUN Rscript install_packages.R
