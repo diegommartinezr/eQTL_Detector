@@ -1,6 +1,8 @@
 FROM rocker/rstudio
 #QTLtools stuff
 COPY QTLtools.sh /QTLtools.sh
+#Now we have to make it executalbe
+RUN chmod u+x QTLtools.sh
 #Executing script
 RUN ["/QTLtools.sh"]
 #Execute R-package installation
