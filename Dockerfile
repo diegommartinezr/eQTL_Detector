@@ -5,7 +5,7 @@ RUN cd home/rstudio
 #QTLtools stuff
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
 #Now we have to make it executalbe
-RUN chmod u+x /home/rstudio/QTLtools.sh
+#RUN chmod u+x /home/rstudio/QTLtools.sh
 #Executing script to install QTLtools
 RUN ["/home/rstudio/QTLtools.sh"]
 
