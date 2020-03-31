@@ -1,39 +1,28 @@
 #!/bin/bash
 
+cd home/rstudio/Results
+
+
 # Install QTLtools
 
 apt-get update && apt-get install -y qtltools
 
-# running some analysis with the published dummy data
+
+
+# running some analysis with the published dummy data)
 
 ## bamstat
 
-wget http://jungle.unige.ch/QTLtools_examples/HG00381.chr22.bam
-
-wget http://jungle.unige.ch/QTLtools_examples/HG00381.chr22.bam.bai
-
-wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
-
-QTLtools bamstat --bam HG00381.chr22.bam --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out HG00381.chr22.bamstat.txt
+(cd home/rstudio/Data ; QTLtools bamstat --bam HG00381.chr22.bam --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out HG00381.chr22.bamstat.txt)
 
 ##  Sequence to genotype matching
 
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
-
-QTLtools mbv --bam HG00381.chr22.bam --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out HG00381.chr22.bamstat.txt
+(cd home/rstudio/Data ; QTLtools mbv --bam HG00381.chr22.bam --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out HG00381.chr22.bamstat.txt)
 
 ## Gene expresion quentification
 
-wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
-
-QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz --sample HG00381 --out-prefix HG00381 --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm
+(cd home/rstudio/Data ; QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz --sample HG00381 --out-prefix HG00381 --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm)
 
 ## PCA Analysis 
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
-
-QTLtools pca --bed genes.50percent.chr22.bed.gz --scale --center --out genes.50percent.chr22
+(cd home/rstudio/Data ; QTLtools pca --bed genes.50percent.chr22.bed.gz --scale --center --out genes.50percent.chr22)

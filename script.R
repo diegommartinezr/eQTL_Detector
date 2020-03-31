@@ -1,4 +1,4 @@
-Data <- read.csv("/HG00381.chr22.bamstat.txt", sep = "")
+Data <- read.csv("/home/rstudio/HG00381.chr22.bamstat.txt", sep = "")
 
 summary(Data)
 
