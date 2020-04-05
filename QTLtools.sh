@@ -1,14 +1,3 @@
-#!/bin/bash
-
-cd home/rstudio/Results
-
-
-# Install QTLtools
-
-apt-get update && apt-get install -y qtltools
-
-
-
 # running some analysis with the published dummy data)
 
 ## bamstat
