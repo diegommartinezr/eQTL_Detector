@@ -2,7 +2,11 @@ FROM rocker/rstudio
 
 #Install QTLtools
 
-RUN apt-get update && apt-get install -y qtltools
+RUN apt-get update && apt-get install -y \
+    qtltools \
+    samtools \
+    tabix \
+    bacftools \
 
 #Copy
 
@@ -16,4 +20,4 @@ COPY script.R /home/rstudio/script.R
 COPY Testing.Rproj /home/rstudio/Testing.Rproj
 
 #Run packages intallation
-RUN Rscript /home/rstudio/install_packages.R
+#RUN Rscript /home/rstudio/install_packages.R
