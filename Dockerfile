@@ -4,6 +4,7 @@ FROM rocker/rstudio
 
 RUN apt-get update && apt-get install -y qtltools
 
+#Install Samtools
 
 WORKDIR /tmp
 
@@ -71,7 +72,7 @@ rm -rf ./${NAMEH}
 
 
 
-
+RUN apt-get update && apt-get install -y tabix
 
 
 #Copy
