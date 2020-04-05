@@ -71,11 +71,10 @@ rm -rf ./${NAMEH}
 #rm -rf ./${NAME}-${VERSION}/
 
 
-
 RUN apt-get update && apt-get install -y tabix
 RUN apt-get update && apt-get install -y bcftools
 
-#Copy
+#Copy QTLtools .sh
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
 RUN chmod u+x /home/rstudio/QTLtools.sh
