@@ -9,7 +9,7 @@ COPY QTLtools.sh /home/rstudio/QTLtools.sh
 #RUN chmod u+x /home/rstudio/QTLtools.sh
 
 COPY QTLtools.sh /home/rstudio/Install_Depend.sh
-#RUN chmod u+x /home/rstudio/Install_Depend.sh
+RUN chmod u+x /home/rstudio/Install_Depend.sh
 
 #Executing script to install Depend
 
@@ -22,5 +22,5 @@ COPY script.R /home/rstudio/script.R
 COPY Testing.Rproj /home/rstudio/Testing.Rproj
 
 #Run packages intallation
-RUN chmod u+x /home/rstudio/install_packages.R
-RUN ["/home/rstudio/install_packages.R"]
+#RUN chmod u+x /home/rstudio/install_packages.R
+#RUN ["/home/rstudio/install_packages.R"]
