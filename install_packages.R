@@ -1,3 +1,4 @@
+#installing EMMA for phylogenetic cofounder analysis
 install.packages("emma")
 
 #Genomic tools intallation

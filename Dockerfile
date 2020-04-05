@@ -16,5 +16,4 @@ COPY script.R /home/rstudio/script.R
 COPY Testing.Rproj /home/rstudio/Testing.Rproj
 
 #Run packages intallation
-#RUN chmod u+x /home/rstudio/install_packages.R
-#RUN ["/home/rstudio/install_packages.R"]
+RUN Rscript /home/rstudio/install_packages.R
