@@ -73,7 +73,7 @@ rm -rf ./${NAMEH}
 
 
 RUN apt-get update && apt-get install -y tabix
-
+RUN apt-get update && apt-get install -y bcftools
 
 #Copy
 
