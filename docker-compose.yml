@@ -9,7 +9,7 @@ services:
         EXAMPLE_ENV: 'Changed environment value'
         PASSWORD: password
     volumes:
-      - ./Data:/home/rstudio/Data:ro
-      - ./Result:/home/rstudio/Results:ro
-    ports:
+      - ./Data:/home/rstudio/Data:rw
+      - ./Result:/home/rstudio/Results:rw
+      ports:
       - 8787:8787
