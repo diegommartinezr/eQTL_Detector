@@ -4,7 +4,7 @@ install.packages("emma")
 #Genomic tools intallation
 install.packages("BiocManager")
 library(BiocManager)
-install("snpStats", version = "3.5", ask = FALSE)
+install("snpStats", ask = FALSE)
 library(snpStats)
 install("GenomicTools", ask = FALSE)
     
