@@ -1,9 +1,11 @@
 FROM rocker/rstudio
 
+
+RUN apt-get update && apt-get install -y qtltools
+
 #Copy
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
-COPY QTLtools.sh /home/rstudio/Install_Depend.sh
 
 #Now we have to make it executalbe
 
