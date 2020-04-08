@@ -19,20 +19,17 @@ Download Docker Compose
 
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
 ```
 
 Give execuable permission to the bin file
 
 ```
 sudo chmod +x /usr/local/bin/docker-compose
-
 ```
 To verify the isntallation is ok, check the Docker Compose version using:
 
 ```
 docker-compose --version
-
 ```
 
   
