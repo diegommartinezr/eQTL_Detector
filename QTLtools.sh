@@ -16,12 +16,12 @@ QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz 
 QTLtools pca --bed genes.50percent.chr22.bed.gz --scale --center --out out_pca
 
 #[cis] to discover QTL in cis via a nominal pass of association
-QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --nominal 0.01 --region chr22:17000000-18000000 --out cis_nominal.txt
-QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --nominal 0.01 --region chr22:17000000-18000000 --out cis_nominal_N.txt --normal
+QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --nominal 0.01 --region chr22:17000000-18000000 --out out_cis_nominal.txt
+QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --nominal 0.01 --region chr22:17000000-18000000 --out out_cis_nominal_N.txt --normal
 
 #[cis] to discover QTL in cis via a permutation pass of association
-QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out cis_permutations.txt
-QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out cis_permutations_N.txt --normal --window 2000000
+QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out out_cis_permutations.txt
+QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out out_cis_permutations_N.txt --normal --window 2000000
 
 #[cis] to discover multiple QTLs per phenotype in cis using a conditional pass
 
@@ -59,11 +59,11 @@ mv out_quan.stats /home/rstudio/Results
 mv out_pca.pca /home/rstudio/Results
 mv out_pca.pca_stats /home/rstudio/Results
 #[cis] Nominal
-mv cis_nominal.txt /home/rstudio/Results
-mv cis_nominal_N.txt /home/rstudio/Results
+mv out_cis_nominal.txt /home/rstudio/Results
+mv out_cis_nominal_N.txt /home/rstudio/Results
 #[cis] Nominal permuation
-mv cis_permutations.txt /home/rstudio/Results
-mv cis_permutations_N.txt /home/rstudio/Results
+mv out_cis_permutations.txt /home/rstudio/Results
+mv out_cis_permutations_N.txt /home/rstudio/Results
 #[cis] conditional pass
 
 #[trans] conditional pass
