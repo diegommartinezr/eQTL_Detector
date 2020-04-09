@@ -1,7 +1,6 @@
 # running some analysis with the published QTLtools dummy data
 
 #We need to run this on the Data Folder
-
 cd /home/rstudio/Data
 
 #[bamstat] to control the quality of the sequence data
@@ -32,10 +31,10 @@ QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --c
 mv nominals_withNormal.txt /home/rstudio/Results
 mv nominals.txt /home/rstudio/Results
 
-
-
-
 #[cis] to discover QTL in cis via a permutation pass of association
+
+QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out permutations.txt
+mv permutations.txt /home/rstudio/Results
 
 #[cis] to discover multiple QTLs per phenotype in cis using a conditional pass
 
@@ -51,4 +50,4 @@ mv nominals.txt /home/rstudio/Results
 
 
 
-
+R -f QTLtools_Test.R
