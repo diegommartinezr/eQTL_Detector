@@ -13,3 +13,5 @@ services:
       - ./Results:/home/rstudio/Results:rw
     ports:
       - 8787:8787
+    command: 
+      - QTLtools_Test.sh
