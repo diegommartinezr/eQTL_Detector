@@ -39,6 +39,15 @@ mv permutations.txt /home/rstudio/Results
 #[cis] to discover multiple QTLs per phenotype in cis using a conditional pass
 
 #[trans] to discover QTL in trans using a full permutation pass
+QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.simulated.chr22.bed.gz --nominal --threshold 1e-5 --out trans.nominal
+QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.simulated.chr22.bed.gz --threshold 1e-5 --permute --out trans.perm123 --seed 123
+mv trans.nominal.best.txt.gz /home/rstudio/Results
+mv trans.nominal.bins.txt.gz /home/rstudio/Results
+mv trans.nominal.hits.txt.gz /home/rstudio/Results
+mv trans.perm123.best.txt.gz /home/rstudio/Results
+mv trans.perm123.bins.txt.gz /home/rstudio/Results
+mv trans.perm123.hits.txt.gz /home/rstudio/Results
+Rscript ~/script/plotTrans.R QQplot.pdf trans.nominal.hits.txt.gz trans.nominal.bins.txt.gz trans.perm123.hits.txt.gz trans.perm123.bins.txt.gz
 
 #[trans] to discover QTL in trans using an approximated permutation pass
 
