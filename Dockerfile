@@ -3,7 +3,7 @@ FROM rocker/rstudio
 #Install QTLtools
 
 RUN apt-get update && apt-get install -y qtltools
-
+RUN apt-get update && apt-get install -y wget
 #Install Samtools
 
 WORKDIR /tmp

@@ -11,5 +11,5 @@ services:
     volumes:
       - ./Data:/home/rstudio/Data:rw
       - ./Result:/home/rstudio/Results:rw
-      ports:
+    ports:
       - 8787:8787
