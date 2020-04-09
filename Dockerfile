@@ -78,6 +78,8 @@ RUN apt-get update && apt-get install -y bcftools
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
 RUN chmod u+x /home/rstudio/QTLtools.sh
+COPY QTLtools.sh /home/rstudio/QTLtools_Test.sh
+RUN chmod u+x /home/rstudio/QTLtools_Test.sh
 
 #Execute R-package installation and runing a script
 
