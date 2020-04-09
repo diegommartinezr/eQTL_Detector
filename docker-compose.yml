@@ -10,6 +10,6 @@ services:
         PASSWORD: password
     volumes:
       - ./Data:/home/rstudio/Data:rw
-      - ./Result:/home/rstudio/Results:rw
+      - ./Results:/home/rstudio/Results:rw
     ports:
       - 8787:8787
