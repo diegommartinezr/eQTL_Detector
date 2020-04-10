@@ -83,7 +83,7 @@ RUN chmod u+x /home/rstudio/QTLtools.sh
 
 COPY install_packages.R /home/rstudio/install_packages.R
 COPY Testing.Rproj /home/rstudio/Testing.Rproj
-COPY QTLtools_Test.R /home/rstudio/QTLtools_Test.R
+COPY QTLtools_Test.R /home/rstudio/QTLtools.R
 
 #Run packages intallation
 #RUN Rscript /home/rstudio/install_packages.R
