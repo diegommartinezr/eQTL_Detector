@@ -1,0 +1,2 @@
+sample	unmmaped_in_genic_regions	duplicate_reads_in_genic_regions	fails_mapQ_in_genic_regions:150	unpaired_in_genic_regions	fails_mismatch_in_genic_regions:5:5	good_reads_in_genic_regions	not_exonic_in_genic_regions	exonic_in_genic_regions	total_reads_in_genic_regions
+HG00381	11411	0	106859	19783	157466	399302	45413	286557	710339
