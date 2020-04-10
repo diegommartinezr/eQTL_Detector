@@ -10,8 +10,6 @@ output: pdf_document
 
 ```{r Load_Packages, echo=FALSE, warning=FALSE}
 
-install.packages("rmarkdown")
-
 ```
 
 
