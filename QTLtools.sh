@@ -1,10 +1,17 @@
 # running some analysis with the published QTLtools dummy data
 
-#We need to run this on the Data Folder
-cd /home/rstudio/Data/Bed-Seq
-
 #[bamstat] to control the quality of the sequence data
-QTLtools bamstat --bam HG00381.chr22.bam --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/out_bamstat.txt
+cd /home/rstudio/Data/Bed-Seq/Bed-Seq
+
+for j in *.bam;
+do echo "samtools index $j $j.bai";
+done
+
+for k in *.bam;
+do echo "QTLtools bamstat --bam $k --bed /home/rstudio/Data/gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/$k.txt";
+done
+
+
 
 cd /home/rstudio/Data
 
