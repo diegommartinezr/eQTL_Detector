@@ -1,0 +1,27 @@
+---
+title: "eQTL_Detector Report"
+author: "Diego M. Martínez R."
+date: "4/10/2020"
+output: pdf_document
+---
+
+# Imported results from QTLtools
+
+
+```{r imp_QTLtools, echo=FALSE, warning=FALSE}
+
+
+
+```
+
+
+
+
+
+
+```{r}
+
+```
+
+
+
