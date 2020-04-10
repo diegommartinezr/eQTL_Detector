@@ -1,17 +1,15 @@
 # running some analysis with the published QTLtools dummy data
 
 #[bamstat] to control the quality of the sequence data
-cd /home/rstudio/Data/Bed-Seq/Bed-Seq
+cd /home/rstudio/Bed-Seq
 
-for j in *.bam;
-do echo "samtools index $j $j.bai";
+for j in *.bam;do
+samtools index $j /home/rstudio/Bed-Seq/$j.bai;
 done
 
-for k in *.bam;
-do echo "QTLtools bamstat --bam $k --bed /home/rstudio/Data/gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/$k.txt";
+for k in *.bam;do
+QTLtools bamstat --bam $k --bed /home/rstudio/Data/gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/$k.txt;
 done
-
-
 
 cd /home/rstudio/Data
 
@@ -54,8 +52,16 @@ QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz -
 
 
 ## Move all outputs to Results
+
 #[bamstat]
-mv out_bamstat.txt /home/rstudio/Results
+mkdir /home/rstudio/Results/bamstat
+cd /home/rstudio/Data
+for h in *.bam.txt;do
+mv $h /home/rstudio/Results/bamstat;
+done
+
+
+
 #[match]
 mv out_match.txt /home/rstudio/Results
 #[quan]
