@@ -10,21 +10,35 @@ output: pdf_document
 
 ```{r Load_Packages, echo=FALSE, warning=FALSE}
 
-
-
-```
-
-
-```{r imp_QTLtools, echo=FALSE, warning=FALSE}
-
+install.packages("rmarkdown")
 
 ```
 
 
+```{r QTLtools_bamstat, echo=FALSE, warning=FALSE}
 
+home <- getwd()
+Results_bamstat <- file.path(home,"Results/bamstat")
+setwd(Results_bamstat)
+list_bamstat <- list.files(path = Results_bamstat)
 
+list_bamstatII <- lapply(list_bamstat, function(x){
+  read.table(file = x,
+             header = F,
+              quote="\"")
+})
 
-# Cis summary
+Results_bamstat <- do.call("rbind", lapply(list_bamstatII, as.data.frame))
+rownames(Results_bamstat) <- list_bamstat
+colnames(Results_bamstat) <- c("Number of sequence reads",
+                               "Number of mapped reads",
+                               "Mapped reads annotated",
+                               "Number of anotations",
+                               "Number of covered annotations by at least one sequence")
+
+knitr::kable(Results_bamstat, caption = "QC summary for each red")
+
+```
 
 
 # Trans summary
