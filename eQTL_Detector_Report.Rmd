@@ -8,22 +8,28 @@ output: pdf_document
 # Imported results from QTLtools
 
 
+```{r Load_Packages, echo=FALSE, warning=FALSE}
+
+
+
+```
+
+
 ```{r imp_QTLtools, echo=FALSE, warning=FALSE}
 
 
 
-
-
 ```
 
 
+# Cis summary
+
+
+# Trans summary
 
 
 
 
-```{r}
-
-```
 
 
 
