@@ -17,9 +17,16 @@ output: pdf_document
 
 ```{r imp_QTLtools, echo=FALSE, warning=FALSE}
 
+home <- getwd()
+Results_dir <- file.path(home,"/Results")
+
+
 
 
 ```
+
+
+
 
 
 # Cis summary

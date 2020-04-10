@@ -1,10 +1,12 @@
 # running some analysis with the published QTLtools dummy data
 
 #We need to run this on the Data Folder
-cd /home/rstudio/Data
+cd /home/rstudio/Data/Bed-Seq
 
 #[bamstat] to control the quality of the sequence data
-QTLtools bamstat --bam HG00381.chr22.bam --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out out_bamstat.txt
+QTLtools bamstat --bam HG00381.chr22.bam --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/out_bamstat.txt
+
+cd /home/rstudio/Data
 
 #[match] to ensure good matching between sequence and genotype data
 QTLtools mbv --bam HG00381.chr22.bam --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out out_match.txt
