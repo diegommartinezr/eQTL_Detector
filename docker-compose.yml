@@ -10,7 +10,7 @@ services:
         PASSWORD: password
     volumes:
       - ./Data:/home/rstudio/Data:rw
-      - ./Data:/home/rstudio/Data/Bed-Seq
+      - ./Data:/home/rstudio/Data/Bed-Seq:rw
       - ./Results:/home/rstudio/Results:rw
     ports:
       - 8787:8787
