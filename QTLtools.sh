@@ -65,33 +65,30 @@ done
 #[match]
 mv out_match.txt /home/rstudio/Results
 #[quan]
-mv out_quan.exon.count.bed /home/rstudio/Results
-mv out_quan.exon.rpkm.bed /home/rstudio/Results
-mv out_quan.gene.count.bed /home/rstudio/Results
-mv out_quan.gene.rpkm.bed /home/rstudio/Results
-mv out_quan.stats /home/rstudio/Results
-#[pca]
-mv out_pca.pca /home/rstudio/Results
-mv out_pca.pca_stats /home/rstudio/Results
-#[cis] Nominal
-mv out_cis_nominal.txt /home/rstudio/Results
-mv out_cis_nominal_N.txt /home/rstudio/Results
-#[cis] Nominal permuation
-mv out_cis_permutations.txt /home/rstudio/Results
-mv out_cis_permutations_N.txt /home/rstudio/Results
-#[cis] conditional pass
+#mv out_quan.exon.count.bed /home/rstudio/Results
+#mv out_quan.exon.rpkm.bed /home/rstudio/Results
+#mv out_quan.gene.count.bed /home/rstudio/Results
+#mv out_quan.gene.rpkm.bed /home/rstudio/Results
+#mv out_quan.stats /home/rstudio/Results
+##[pca]
+#mv out_pca.pca /home/rstudio/Results
+#mv out_pca.pca_stats /home/rstudio/Results
+##[cis] Nominal
+#mv out_cis_nominal.txt /home/rstudio/Results
+#mv out_cis_nominal_N.txt /home/rstudio/Results
+##[cis] Nominal permuation
+#mv out_cis_permutations.txt /home/rstudio/Results
+#mv out_cis_permutations_N.txt /home/rstudio/Results
+##[cis] conditional pass
 
 #[trans] conditional pass
-mv out_trans.nominal.best.txt.gz /home/rstudio/Results
-mv out_trans.nominal.bins.txt.gz /home/rstudio/Results
-mv out_trans.nominal.hits.txt.gz /home/rstudio/Results
-#[trans] permutation pass
-mv out_trans.sample.best.txt.gz /home/rstudio/Results
-mv out_trans.sample.bins.txt.gz /home/rstudio/Results
-mv out_trans.sample.hits.txt.gz /home/rstudio/Results
+#mv out_trans.nominal.best.txt.gz /home/rstudio/Results
+#mv out_trans.nominal.bins.txt.gz /home/rstudio/Results
+#mv out_trans.nominal.hits.txt.gz /home/rstudio/Results
+##[trans] permutation pass
+#mv out_trans.sample.best.txt.gz /home/rstudio/Results
+#mv out_trans.sample.bins.txt.gz /home/rstudio/Results
+#mv out_trans.sample.hits.txt.gz /home/rstudio/Results
 
 
 
-## Run an R sript
-cd /home/rstudio
-R -f QTLtools_Test.R
