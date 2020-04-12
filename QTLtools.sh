@@ -93,5 +93,5 @@ mv out_match.txt /home/rstudio/Results
 #Compile Report
 cd /home/rstudio
 mkdir /home/rstudio/Results/Report
-R -e "rmarkdown::render('eQTL_Detectot_Report.Rmd',output_file='Report.pdf')"
+R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
 mv Report.pdf /home/rstudio/Results/Report
