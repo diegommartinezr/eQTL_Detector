@@ -18,19 +18,6 @@ RUN cd /opt && \
 RUN apt-get update && apt-get install -y tabix
 RUN apt-get update && apt-get install -y bcftools
 
-RUN apt-get update \
-    && apt-get install -y \
-    texlive-full \
-    && echo "\nmain_memory = 12000000" >> /etc/texmf/texmf.d/00debian.cnf \
-    && echo "\nextra_mem_bot = 12000000" >> /etc/texmf/texmf.d/00debian.cnf \
-    && echo "\nfont_mem_size = 12000000" >> /etc/texmf/texmf.d/00debian.cnf \
-    && echo "\npool_size = 12000000" >> /etc/texmf/texmf.d/00debian.cnf \
-    && echo "\nbuf_size = 12000000" >> /etc/texmf/texmf.d/00debian.cnf \
-    && update-texmf \
-    && texhash \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 #Copy QTLtools.sh
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
