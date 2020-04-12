@@ -90,5 +90,8 @@ mv out_match.txt /home/rstudio/Results
 #mv out_trans.sample.bins.txt.gz /home/rstudio/Results
 #mv out_trans.sample.hits.txt.gz /home/rstudio/Results
 
-
-
+#Compile Report
+cd /home/rstudio
+mkdir /home/rstudio/Results/Report
+R -e "rmarkdown::render('eQTL_Detectot_Report.Rmd',output_file='Report.pdf')"
+mv Report.pdf /home/rstudio/Results/Report
