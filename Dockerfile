@@ -18,6 +18,12 @@ RUN cd /opt && \
 RUN apt-get update && apt-get install -y tabix
 RUN apt-get update && apt-get install -y bcftools
 
+RUN apt-get update \
+    && apt-get install -y \
+    texlive-full \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 #Copy QTLtools.sh
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
