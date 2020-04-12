@@ -35,6 +35,9 @@ COPY install_packages.R /home/rstudio/install_packages.R
 COPY eQTL_Detector_Report.Rmd /home/rstudio/eQTL_Detector_Report.Rmd
 
 #Run packages intallation
-#RUN Rscript /home/rstudio/install_packages.R
+RUN Rscript /home/rstudio/install_packages.R
+
+
+
 
 
