@@ -31,22 +31,6 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-#Otional aplications
-
-RUN cd /opt && \
-    wget https://github.com/francois-a/fastqtl/archive/59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && \
-    tar -xf 59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && rm 59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && \
-    mv fastqtl-59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd fastqtl && \
-    cd fastqtl && mkdir obj && sed -i 's/RMATH=/#RMATH/' Makefile && make
-ENV PATH /opt/fastqtl/bin:$PATH
-
-# PLINK
-RUN mkdir /opt/plink && cd /opt/plink && \
-    wget http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20200107.zip && \
-    unzip plink_linux_x86_64_20200107.zip && rm plink_linux_x86_64_20200107.zip
-ENV PATH $PATH:/opt/plink
-
-
 #Copy QTLtools.sh
 
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
