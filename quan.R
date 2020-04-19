@@ -1,9 +1,12 @@
+setwd("/home/rstudio")
+install.packages("rlist")
 library(rlist)
 library(readr)
 home <- getwd()
 quan <- file.path(home,"Results/quan")
 setwd(quan)
 list_quan <- list.files(path = quan)
+
 
 list_quan <- lapply(list_quan, function(x){
   read_delim(file = x,"\t", escape_double = FALSE, trim_ws = TRUE)})
