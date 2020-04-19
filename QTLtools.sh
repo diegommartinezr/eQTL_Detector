@@ -11,10 +11,31 @@ for k in *.bam;do
 QTLtools bamstat --bam $k --bed /home/rstudio/Data/gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/$k.txt;
 done
 
-cd /home/rstudio/Data
-
 #[match] to ensure good matching between sequence and genotype data
-QTLtools mbv --bam HG00381.chr22.bam --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out out_match.txt
+
+
+mkdir /home/rstudio/Results/mbv
+cd /home/rstudio/Bed-Seq
+
+#I'm goingfg to download the data for a momment to see how to get the index with the code
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
+for k in *.bam;do
+QTLtools mbv --bam $k --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out mbv_$k.txt
+done
+
+for k in mbv_*;do
+mv $k /home/rstudio/Results/mbv
+done
+
+
+
+
+
+
+
 
 #[quan] to quantify gene expression
 QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz --sample HG00381 --out out_quan --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm
