@@ -13,17 +13,22 @@ output: pdf_document
 
 
 ```{r QTLtools_bamstat, echo=FALSE, fig.height=8, fig.width=14, warning=FALSE}
+library(readr)
 
 home <- getwd()
 Results_bamstat <- file.path(home,"Results/bamstat")
-setwd(Results_bamstat)
+
 list_bamstat <- list.files(path = Results_bamstat)
 
+setwd(list_bamstat)
 list_bamstatII <- lapply(list_bamstat, function(x){
-  read.table(file = x,
-             header = F,
-              quote="\"")
-})
+  read.table(file = x, 
+             quote="\"", 
+             comment.char="",
+             file.path(home,"Results/bamstat"))
+  })
+
+
 
 Results_bamstat <- do.call("rbind", lapply(list_bamstatII, as.data.frame))
 rownames(Results_bamstat) <- list_bamstat
@@ -42,6 +47,8 @@ for(d in colnames(Results_bamstat)){
   barplot(Results_bamstat[,d],
           main = d)
 }
+
+
 
 ```
 
