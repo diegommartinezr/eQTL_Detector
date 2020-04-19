@@ -34,9 +34,6 @@ done
 
 
 
-
-
-
 #[quan] to quantify gene expression
 QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz --sample HG00381 --out out_quan --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm
 
