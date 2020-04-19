@@ -31,6 +31,7 @@ done
 #[quan] to quantify gene expression
 
 mkdir /home/rstudio/Results/quan
+mkdir /home/rstudio/Results/quan/stats
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
 for k in *.bam;do
@@ -38,14 +39,23 @@ QTLtools quan --bam $k --gtf gencode.v19.annotation.chr22.gtf.gz --sample "${k%.
 done
 
 
-for r in *.bed;do
+for r in *gene.rpkm.bed;do
 mv $r /home/rstudio/Results/quan
 done
 
+for r in *.bed;do
+mv $r /home/rstudio/Results/quan/stats
+done
 
 for r in *.stats;do
-mv $r /home/rstudio/Results/quan
+mv $r /home/rstudio/Results/quan/stats
 done
+
+cd /home/rstudio
+
+Rscript quan.R
+
+
 
 ## Noew we need to create a unique file with all samples togeter with their quan values
 
