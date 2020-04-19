@@ -55,9 +55,6 @@ cd /home/rstudio
 
 Rscript quan.R
 
-
-
-
 #Compile Report
 cd /home/rstudio
 mkdir /home/rstudio/Results/Report
