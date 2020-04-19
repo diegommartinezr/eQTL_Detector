@@ -13,11 +13,9 @@ done
 
 #[match] to ensure good matching between sequence and genotype data
 
-
 mkdir /home/rstudio/Results/mbv
-cd /home/rstudio/Bed-Seq
 
-#I'm goingfg to download the data for a momment to see how to get the index with the code
+##I'm goingfg to download the data for a momment to see how to get the index with vcf tools or somethig like.
 
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
@@ -30,15 +28,32 @@ for k in mbv_*;do
 mv $k /home/rstudio/Results/mbv
 done
 
-
-
-
-
 #[quan] to quantify gene expression
-QTLtools quan --bam HG00381.chr22.bam --gtf gencode.v19.annotation.chr22.gtf.gz --sample HG00381 --out out_quan --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm
+
+mkdir /home/rstudio/Results/quan
+wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
+
+for k in *.bam;do
+QTLtools quan --bam $k --gtf gencode.v19.annotation.chr22.gtf.gz --sample "${k%.chr22.bam}" --out-prefix $k --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm 
+done
+
+
+for r in *.bed;do
+mv $r /home/rstudio/Results/quan
+done
+
+
+for r in *.stats;do
+mv $r /home/rstudio/Results/quan
+done
+
+## Noew we need to create a unique file with all samples togeter with their quan values
 
 #[pca] to perform PCA on phenotype and genotype data
 QTLtools pca --bed genes.50percent.chr22.bed.gz --scale --center --out out_pca
+
+
+
 
 #[cis] to discover QTL in cis via a nominal pass of association
 QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --nominal 0.01 --region chr22:17000000-18000000 --out out_cis_nominal.txt
@@ -49,8 +64,6 @@ QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --c
 QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 1000 --region chr22:17000000-18000000 --out out_cis_permutations_N.txt --normal --window 2000000
 
 #[cis] to discover multiple QTLs per phenotype in cis using a conditional pass
-
-
 
 #[trans] to discover QTL in trans using a full permutation pass
 QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --nominal --threshold 1e-5 --out out_trans.nominal 
