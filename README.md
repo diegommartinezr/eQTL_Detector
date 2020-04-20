@@ -4,7 +4,7 @@ An automated pipeline for eQTL detection and _downstream analysis_
 
 ## Before start 
 
-Make sure you have istalled Docker and Docker Compose if you don't have installed follow these steps.
+Make sure you have istalled Docker and Docker Compose.
 
 ## Data
 
