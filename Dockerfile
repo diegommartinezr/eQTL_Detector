@@ -5,8 +5,16 @@ RUN mkdir /home/rstudio/Results/bamstat
 RUN mkdir /home/rstudio/Results/mbv
 RUN mkdir /home/rstudio/Results/quan
 
-#Install QTLtools
+#Install R Packages
+RUN Rscript -e "install.packages('glue')"
+RUN Rscript -e "install.packages('knitr')"
+RUN Rscript -e "install.packages('rmarkdown')"
+RUN Rscript -e "install.packages('kableExtra')"
+RUN Rscript -e "install.packages('XML')"
+RUN Rscript -e "install.packages('rlist')"
+RUN Rscript -e "install.packages('readr')"
 
+#Install QTLtools
 RUN apt-get update && apt-get install -y qtltools
 RUN apt-get update && apt-get install -y wget
 
@@ -35,11 +43,3 @@ RUN chmod u+x /home/rstudio/QTLtools.sh
 COPY install_packages.R /home/rstudio/install_packages.R
 COPY eQTL_Detector_Report.Rmd /home/rstudio/eQTL_Detector_Report.Rmd
 COPY quan.R /home/rstudio/quan.R
-
-#Run packages intallation
-RUN Rscript /home/rstudio/install_packages.R
-
-
-
-
-
