@@ -6,32 +6,25 @@ An automated pipeline for eQTL detection and _downstream analysis_
 
 Make sure you have istalled Docker and Docker Compose if you don't have installed follow these steps.
 
+## Data
 
-### Docker installation
-  
-To intall Docker
+This pipeline use three different data:
 
-### Docker Comopose installation
+  * Genotyping data in .VCF format
+  * RNA-Seq data in .BAM format
+  * A covariance matrix in .txt format
 
-Download Docker Compose
+Appart from the source data the reference data to use will be:
+
+  * Annotations in .BED format
+  * A .GTF file containing the gencode annotation
+
+Put all these files on the Bed-Seq folder and you will be ready to go
+
+## Running the pipeline
+
+After you have all the data on the Bed-Seq folder to run the pipeline just run the follow command:
 
 ```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+bash Run_Pipeline.sh
 ```
-Give execuable permission to the bin file
-```
-sudo chmod +x /usr/local/bin/docker-compose
-```
-To verify the isntallation is ok, check the Docker Compose version using:
-
-```
-docker-compose --version
-```
-This will show you the currnt Docker Compose version you are using
-
-
-  * Dowloand this repository
-
-## Using the pipeline
-
-This repository contain a Data folder where you will put you data, so all scripts can take the initial data from there.
