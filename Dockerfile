@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM martindi/eqtldetectorbase
 
 RUN mkdir /home/rstudio/Results
 RUN mkdir /home/rstudio/Results/bamstat
