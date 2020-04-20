@@ -1,4 +1,4 @@
----
+﻿---
 title: "eQTL_Detector Report"
 author: "Diego M. Martínez R."
 date: "4/10/2020"
@@ -20,7 +20,7 @@ Results_bamstat <- file.path(home,"Results/bamstat")
 
 list_bamstat <- list.files(path = Results_bamstat)
 
-setwd(list_bamstat)
+setwd(Results_bamstat)
 list_bamstatII <- lapply(list_bamstat, function(x){
   read.table(file = x, 
              quote="\"", 

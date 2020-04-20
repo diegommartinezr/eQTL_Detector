@@ -40,6 +40,5 @@ RUN chmod u+x /home/rstudio/QTLtools.sh
 
 #Execute R-package installation and run R script
 
-COPY install_packages.R /home/rstudio/install_packages.R
 COPY eQTL_Detector_Report.Rmd /home/rstudio/eQTL_Detector_Report.Rmd
 COPY quan.R /home/rstudio/quan.R
