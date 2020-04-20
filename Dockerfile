@@ -1,5 +1,10 @@
 FROM rocker/rstudio-stable
 
+mkdir /home/rstudio/Results/bamstat
+mkdir /home/rstudio/Results/mbv
+mkdir /home/rstudio/Results/quan
+
+
 #Install QTLtools
 
 RUN apt-get update && apt-get install -y qtltools

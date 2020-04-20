@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.6"
 services:
   server:
     build:
@@ -12,5 +12,8 @@ services:
       - ./Data:/home/rstudio/Data:rw
       - ./Bed-Seq:/home/rstudio/Bed-Seq:rw
       - ./Results:/home/rstudio/Results:rw
+      - ./Results/bamstat:/home/rstudio/Results/bamstat:rw
+      - ./Results/mbv:/home/rstudio/Results/mbv:rw
+      - ./Results/quan:/home/rstudio/Results/quan:rw
     ports:
       - 8787:8787
