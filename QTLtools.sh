@@ -2,13 +2,17 @@
 
 #[bamstat] to control the quality of the sequence data
 cd /home/rstudio/Bed-Seq
+mkdir /home/rstudio/Results/bamstat
+
+#Download the test ref
+wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 for j in *.bam;do
 samtools index $j /home/rstudio/Bed-Seq/$j.bai;
 done
 
 for k in *.bam;do
-QTLtools bamstat --bam $k --bed /home/rstudio/Data/gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Data/$k.txt;
+QTLtools bamstat --bam $k --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Results/bamstat/$k.txt;
 done
 
 #[match] to ensure good matching between sequence and genotype data
