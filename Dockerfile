@@ -1,9 +1,9 @@
-FROM rocker/rstudio-stable
+FROM rocker/rstudio
 
+RUN mkdir /home/rstudio/Results
 RUN mkdir /home/rstudio/Results/bamstat
 RUN mkdir /home/rstudio/Results/mbv
 RUN mkdir /home/rstudio/Results/quan
-
 
 #Install QTLtools
 
