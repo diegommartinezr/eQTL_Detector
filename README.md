@@ -6,6 +6,13 @@ An automated pipeline for eQTL detection and _downstream analysis_
 
 Make sure you have istalled Docker and Docker Compose.
 
+### Install Docker
+
+```
+sudo apt install docker .io
+```
+
+
 ## Data
 
 This pipeline use three different data:
