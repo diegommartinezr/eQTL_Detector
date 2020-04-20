@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM r-base
 
 RUN mkdir /home/rstudio/Results
 RUN mkdir /home/rstudio/Results/bamstat
