@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM rocker/rstudio-stable
 
 #Install QTLtools
 
