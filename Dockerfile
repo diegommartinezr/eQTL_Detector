@@ -10,9 +10,7 @@ RUN Rscript -e "install.packages('glue')"
 RUN Rscript -e "install.packages('knitr')"
 RUN Rscript -e "install.packages('rmarkdown')"
 RUN Rscript -e "install.packages('kableExtra')"
-RUN Rscript -e "install.packages('XML')"
-RUN Rscript -e "install.packages('rlist')"
-RUN Rscript -e "install.packages('readr')"
+RUN Rscript -e "install.packages('devtools')"
 
 #Install QTLtools
 RUN apt-get update && apt-get install -y qtltools
