@@ -30,4 +30,4 @@ for (a in vector_samples) {
 
 RPKM <- cbind(list_quan[[1]][,1:6],RPKM)
 
-write.table(RPKM, "/home/Bed-Seq/RPKM.bed")
+write.table(RPKM, "RPKM.bed")
