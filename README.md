@@ -11,13 +11,33 @@ Make sure you have istalled Docker and Docker Compose.
 ```
 sudo apt install docker .io
 ```
+### Install Docker-Compose
+
+Firt download Docker-Compose
+
+```
+sudo apt install docker .io
+```
+Give chmod to the application
+
+```
+sudo chmod +x /usr/local/bin/docker-compose
+```
+Finally check the version
+```
+docker-compose --version
+```
+If everything is fine you should see something like this:
+```
+docker-compose version 1.21.2, build a133471
+```
 ### Download this repository
 
 ```
 wget https://github.com/diegommartinezr/eQTL_Detector/archive/master.zip
 ```
 
-## Data
+## Preparing your Data
 
 This pipeline use three different data:
 
