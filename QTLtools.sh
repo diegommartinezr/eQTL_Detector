@@ -12,8 +12,13 @@ samtools index $j /home/rstudio/Bed-Seq/$j.bai;
 done
 
 for k in *.bam;do
-QTLtools bamstat --bam $k --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out /home/rstudio/Results/bamstat/$k.txt;
+QTLtools bamstat --bam $k --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out $k.txt;
 done
+
+for k in *.txt;do
+mv $k /home/rstudio/Results/bamstat
+done
+
 
 #[match] to ensure good matching between sequence and genotype data
 
@@ -42,7 +47,6 @@ for k in *.bam;do
 QTLtools quan --bam $k --gtf gencode.v19.annotation.chr22.gtf.gz --sample "${k%.chr22.bam}" --out-prefix $k --filter-mapping-quality 150 --filter-mismatch 5 --filter-mismatch-total 5 --rpkm 
 done
 
-
 for r in *gene.rpkm.bed;do
 mv $r /home/rstudio/Results/quan
 done
@@ -59,8 +63,9 @@ cd /home/rstudio
 
 Rscript quan.R
 
-#Compile Report
-cd /home/rstudio
-mkdir /home/rstudio/Results/Report
-R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
-mv Report.pdf /home/rstudio/Results/Report
+#[pca]
+
+cd /home/rstudio/Results/quan
+
+cat RPKM.bed | bgzip > RPKM.bed.bgz
+tabix -p bed RPKM.bed.bgz
