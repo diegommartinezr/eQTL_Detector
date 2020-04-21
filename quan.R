@@ -1,11 +1,11 @@
 setwd("/home/rstudio")
-install.packages("rlist")
 library(rlist)
 library(readr)
 home <- getwd()
 quan <- file.path(home,"Results/quan")
 setwd(quan)
 list_quan <- list.files(path = quan)
+list_quan <- list_quan [! list_quan %in% c("stats")]
 
 
 list_quan <- lapply(list_quan, function(x){
@@ -26,8 +26,8 @@ for (a in vector_samples) {
   samples_names[a] <- list_col[a*7]
   RPKM[,a] <- list_all[,a*7]
   colnames(RPKM) <- samples_names
-  }
+}
 
 RPKM <- cbind(list_quan[[1]][,1:6],RPKM)
 
-write.table(RPKM, "RPKM.bed")
+write.table(RPKM, "/home/Bed-Seq/RPKM.bed")
