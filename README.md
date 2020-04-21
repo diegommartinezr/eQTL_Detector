@@ -11,7 +11,11 @@ Make sure you have istalled Docker and Docker Compose.
 ```
 sudo apt install docker .io
 ```
+### Download this repo
 
+´´´
+wget https://github.com/diegommartinezr/eQTL_Detector/archive/master.zip
+´´´
 
 ## Data
 
