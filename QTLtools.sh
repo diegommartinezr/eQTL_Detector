@@ -68,14 +68,16 @@ Rscript quan.R
 cd /home/rstudio/Results/quan
 mkdir /home/rstudio/Results/pca
 
-cat RPKM.bed | bgzip > RPKM.bed
-samtools index RPKM.bed.bgz  RPKM.bai
+mv RPKM.bed /home/rstudio/Results
 
-QTLtools pca --bed RPKM.bed --scale --center --out pca_Expression
+#cat RPKM.bed | bgzip > RPKM.bed
+#samtools index RPKM.bed.bgz  RPKM.bai
+
+#QTLtools pca --bed RPKM.bed --scale --center --out pca_Expression
 
 
 #[cis_nominal]
-mkdir /home/rstudio/Results/cis_nominal
+#mkdir /home/rstudio/Results/cis_nominal
 
 
 
