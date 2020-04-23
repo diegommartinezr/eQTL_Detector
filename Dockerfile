@@ -4,6 +4,8 @@ RUN mkdir /home/rstudio/Results
 RUN mkdir /home/rstudio/Results/bamstat
 RUN mkdir /home/rstudio/Results/mbv
 RUN mkdir /home/rstudio/Results/quan
+RUN mkdir /home/rstudio/Results/pca
+RUN mkdir /home/rstudio/Results/cis_nominal
 
 COPY eQTL_Detector_Report.Rmd /home/rstudio/eQTL_Detector_Report.Rmd
 COPY quan.R /home/rstudio/quan.R
