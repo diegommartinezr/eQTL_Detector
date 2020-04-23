@@ -1,10 +1,8 @@
 version: "3.6"
 services:
   server:
-    build:
-      context: .
-      args:
-        EXAMPLE_ARG: 'example argument'
+    build: .
+    image: eQTL_Detector
     environment:
         EXAMPLE_ENV: 'Changed environment value'
         PASSWORD: password
