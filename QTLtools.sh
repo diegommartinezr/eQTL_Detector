@@ -66,6 +66,23 @@ Rscript quan.R
 #[pca]
 
 cd /home/rstudio/Results/quan
+mkdir /home/rstudio/Results/pca
 
-cat RPKM.bed | bgzip > RPKM.bed.bgz
-tabix -p bed RPKM.bed.bgz
+cat RPKM.bed | bgzip > RPKM.bed
+samtools index RPKM.bed.bgz  RPKM.bai
+
+QTLtools pca --bed RPKM.bed --scale --center --out pca_Expression
+
+
+#[cis_nominal]
+mkdir /home/rstudio/Results/cis_nominal
+
+
+
+
+#Compile Report
+cd /home/rstudio
+mkdir /home/rstudio/Results/pca
+R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
+mv Report.pdf /home/rstudio/Results/Report
+
