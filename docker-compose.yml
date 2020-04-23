@@ -15,5 +15,7 @@ services:
       - ./Results/bamstat:/home/rstudio/Results/bamstat:rw
       - ./Results/mbv:/home/rstudio/Results/mbv:rw
       - ./Results/quan:/home/rstudio/Results/quan:rw
+      - ./Results/quan:/home/rstudio/Results/pca:rw
+      - ./Results/quan:/home/rstudio/Results/cis_nominal:rw
     ports:
       - 8787:8787
