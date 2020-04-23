@@ -24,8 +24,7 @@ setwd(Results_bamstat)
 list_bamstatII <- lapply(list_bamstat, function(x){
   read.table(file = x, 
              quote="\"", 
-             comment.char="",
-             file.path(home,"Results/bamstat"))
+             comment.char="")
   })
 
 
