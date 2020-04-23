@@ -31,8 +31,6 @@ for (a in vector_samples) {
 
 RPKM <- cbind(list_quan[[1]][,1:6],RPKM)
 
-RPKM$`#chr` <- as.character(RPKM$`#chr`)
-
 BedRPKM <-convert2bed(RPKM,  set.type = FALSE,  
                       check.zero.based = FALSE,  
                       check.chr = FALSE,  
