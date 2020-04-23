@@ -1,4 +1,3 @@
-setwd("/home/rstudio")
 library(rlist)
 library(readr)
 home <- getwd()
@@ -30,4 +29,16 @@ for (a in vector_samples) {
 
 RPKM <- cbind(list_quan[[1]][,1:6],RPKM)
 
-write.table(RPKM, "RPKM.bed")
+RPKM$`#chr` <- as.character(RPKM$`#chr`)
+
+BedRPKM <-convert2bed(RPKM,  set.type = FALSE,  
+                      check.zero.based = FALSE,  
+                      check.chr = FALSE,  
+                      check.valid = FALSE,  
+                      check.sort = FALSE,  
+                      check.merge = FALSE,  
+                      verbose = FALSE)
+
+BedRPKM <- BedRPKM[,-c(7:12)]
+
+write.table(BedRPKM, "RPKM.bed")
