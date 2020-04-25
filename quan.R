@@ -24,4 +24,4 @@ RPKM <- data.frame(matrix(ncol = largo,
 RPKM <- list_quan[[1]][,1:6]
 
 
-write.table(BedRPKM, "RPKM.bed")
+write.table(RPKM, "RPKM.bed")
