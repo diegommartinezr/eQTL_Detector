@@ -62,8 +62,10 @@ done
 cd /home/rstudio
 
 # Create the first 6 colums with R
-
 Rscript quan.R
+
+#Put it in Reslts
+cd /home/rstudio/Results/quan
 mv RPKM.bed /home/rstudio/Results
 
 # We create a table with the values of the quan values
