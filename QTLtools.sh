@@ -62,12 +62,10 @@ done
 cd /home/rstudio/Results/quan
 
 # Create the first 6 colums with R
+
 Rscript /home/rstudio/quan.R
 
 paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
-
-mv RPKM_values.bed /home/rstudio/Results
-
 
 mv RPKM.bed /home/rstudio/Results
 mv RPKM_values.bed /home/rstudio/Results
