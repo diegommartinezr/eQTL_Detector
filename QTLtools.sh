@@ -61,27 +61,33 @@ done
 
 cd /home/rstudio
 
-#Rscript quan.R
+Rscript quan.R
+mv RPKM.bed /home/rstudio/Results
+
+# We create a table with the values of the quan values
+for i in *gene.rpkm.bed; do
+    if [[ -f RPKM_values.bed ]]; then
+        paste RPKM_values.bed  <(cut -f 7 "$i") > tmp.txt
+    else
+        cut -f 7 "$i" > tmp.txt
+    fi
+    mv tmp.txt RPKM_values.bed
+ done
+
+# Now we merge the first six columns and then we merge with the quan values
+
+
+
 
 #[pca]
 
-cd /home/rstudio/Results/quan
-mkdir /home/rstudio/Results/pca
-
-mv RPKM.bed /home/rstudio/Results
-
+#cd /home/rstudio/Results/quan
+#mkdir /home/rstudio/Results/pca
 #cat RPKM.bed | bgzip > RPKM.bed
 #samtools index RPKM.bed.bgz  RPKM.bai
-
 #QTLtools pca --bed RPKM.bed --scale --center --out pca_Expression
-
-
 #[cis_nominal]
 #mkdir /home/rstudio/Results/cis_nominal
-
-
-
-
 #Compile Report
 cd /home/rstudio
 mkdir /home/rstudio/Results/pca
