@@ -61,6 +61,8 @@ done
 
 cd /home/rstudio
 
+# Create the first 6 colums with R
+
 Rscript quan.R
 mv RPKM.bed /home/rstudio/Results
 
@@ -74,10 +76,7 @@ for i in *gene.rpkm.bed; do
     mv tmp.txt RPKM_values.bed
  done
 
-# Now we merge the first six columns and then we merge with the quan values
-
-
-
+mv RPKM_values.bed /home/rstudio/Results
 
 #[pca]
 
