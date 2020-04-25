@@ -61,27 +61,28 @@ done
 
 cd /home/rstudio/Results/quan
 
-# Create the first 6 colums with R
 
-Rscript /home/rstudio/quan.R
+FIRST=$(ls *rpkm.bed| head -1)
+
+cut -f 1-6 $FIRST >RPKM.bed
 
 paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
 
-mv RPKM.bed /home/rstudio/Results
-mv RPKM_values.bed /home/rstudio/Results
+paste RPKM.bed RPKM_values.bed > RPKM_all.bed
+
+bgzip RPKM_all.bed  && tabix -p bed RPKM_all.bed.gz 
 
 #[pca]
 
-#cd /home/rstudio/Results/quan
-#mkdir /home/rstudio/Results/pca
-#cat RPKM.bed | bgzip > RPKM.bed
-#samtools index RPKM.bed.bgz  RPKM.bai
-#QTLtools pca --bed RPKM.bed --scale --center --out pca_Expression
+QTLtools pca --bed RPKM_all.bed.gz --scale --center --out genes.50percent.chr22 
+
 #[cis_nominal]
-#mkdir /home/rstudio/Results/cis_nominal
+mkdir /home/rstudio/Results/cis_nominal
+
+
 #Compile Report
-#cd /home/rstudio
-#mkdir /home/rstudio/Results/pca
-#R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
-#mv Report.pdf /home/rstudio/Results/Report
+cd /home/rstudio
+mkdir /home/rstudio/Results/pca
+R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
+mv Report.pdf /home/rstudio/Results/Report
 
