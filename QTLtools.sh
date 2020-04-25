@@ -61,7 +61,7 @@ done
 
 cd /home/rstudio
 
-Rscript quan.R
+#Rscript quan.R
 
 #[pca]
 
