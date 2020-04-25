@@ -59,25 +59,17 @@ for r in *.stats;do
 mv $r /home/rstudio/Results/quan/stats
 done
 
-cd /home/rstudio
+cd /home/rstudio/Results/quan
 
 # Create the first 6 colums with R
-Rscript quan.R
+Rscript /home/rstudio/quan.R
 
-#Put it in Reslts
-cd /home/rstudio/Results/quan
+paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
+
+mv RPKM_values.bed /home/rstudio/Results
+
+
 mv RPKM.bed /home/rstudio/Results
-
-# We create a table with the values of the quan values
-for i in *gene.rpkm.bed; do
-    if [[ -f RPKM_values.bed ]]; then
-        paste RPKM_values.bed  <(cut -f 7 "$i") > tmp.txt
-    else
-        cut -f 7 "$i" > tmp.txt
-    fi
-    mv tmp.txt RPKM_values.bed
- done
-
 mv RPKM_values.bed /home/rstudio/Results
 
 #[pca]
@@ -90,8 +82,8 @@ mv RPKM_values.bed /home/rstudio/Results
 #[cis_nominal]
 #mkdir /home/rstudio/Results/cis_nominal
 #Compile Report
-cd /home/rstudio
-mkdir /home/rstudio/Results/pca
-R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
-mv Report.pdf /home/rstudio/Results/Report
+#cd /home/rstudio
+#mkdir /home/rstudio/Results/pca
+#R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
+#mv Report.pdf /home/rstudio/Results/Report
 
