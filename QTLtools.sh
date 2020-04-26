@@ -74,7 +74,9 @@ bgzip RPKM_all.bed  && tabix -p bed RPKM_all.bed.gz
 
 #[pca]
 
-QTLtools pca --bed RPKM_all.bed.gz --scale --center --out genes.50percent.chr22 
+QTLtools pca --bed RPKM_all.bed.gz --scale --center --out /home/rstudio/Results/pca/RPKM.bed
+
+QTLtools pca --vcf /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz --scale --center --maf 0.05 --distance 50000 --out genotypes_pca 
 
 #[cis_nominal]
 mkdir /home/rstudio/Results/cis_nominal
@@ -85,4 +87,3 @@ cd /home/rstudio
 mkdir /home/rstudio/Results/pca
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
 mv Report.pdf /home/rstudio/Results/Report
-
