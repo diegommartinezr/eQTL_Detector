@@ -22,7 +22,6 @@ done
 
 #[match] to ensure good matching between sequence and genotype data
 
-mkdir /home/rstudio/Results/mbv
 
 ##I'm goingfg to download the data for a momment to see how to get the index with vcf tools or somethig like.
 
@@ -39,8 +38,6 @@ done
 
 #[quan] to quantify gene expression
 
-mkdir /home/rstudio/Results/quan
-mkdir /home/rstudio/Results/quan/stats
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
 for k in *.bam;do
@@ -76,11 +73,19 @@ bgzip RPKM_all.bed  && tabix -p bed RPKM_all.bed.gz
 
 QTLtools pca --bed RPKM_all.bed.gz --scale --center --out /home/rstudio/Results/pca/RPKM.bed
 
-QTLtools pca --vcf /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz --scale --center --maf 0.05 --distance 50000 --out genotypes_pca 
+QTLtools pca --vcf GENOTYPES.vcf.gz --scale --center --maf 0.05 --distance 50000 --out genotypes_pca 
 
 #[cis_nominal]
-mkdir /home/rstudio/Results/cis_nominal
 
+cd /home/rstudio/Results/cis_nominal
+
+QTLtools cis \
+  --vcf /home/rstudio/Bed-Seq/GENOTYPES.vcf.gz \
+  --bed /home/rstudio/Results/quan/RPKM_all.bed.gz \
+  --cov /home/rstudio/Bed-Seq/COV.txt.gz \
+  --nominal 0.01 \
+  --region chr22:17000000-18000000 \
+  --out nominals.txt
 
 #Compile Report
 cd /home/rstudio
