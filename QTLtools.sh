@@ -81,6 +81,10 @@ QTLtools pca --vcf GENOTYPES.vcf.gz --scale --center --maf 0.05 --distance 50000
 # Get the files for the cis analysiis
 cd /home/rstudio/Bed-Seq
 
+
+# Get the files for the cis analysiis
+cd /home/rstudio/Bed-Seq
+
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
@@ -105,6 +109,13 @@ mv genes.covariates.pc50.txt.gz /home/rstudio/Results/cis_nominal/COV.txt.gz
 
 cd /home/rstudio/Results/cis_nominal
 
+
+#Tabinx indexing VCF file
+
+tabix -p gff GENOTYPES.vcf.gz
+
+#bcftools view GENOTYPES.vcf.gz  | less -S 
+
 QTLtools cis \
   --vcf /home/rstudio/Bed-Seq/GENOTYPES.vcf.gz \
   --bed /home/rstudio/Results/quan/RPKM_all.bed.gz \
@@ -116,6 +127,7 @@ QTLtools cis \
 
 #Compile Report
 cd /home/rstudio
-mkdir /home/rstudio/Results/pca
+
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
 mv Report.pdf /home/rstudio/Results/Report
+
