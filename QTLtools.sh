@@ -76,6 +76,32 @@ QTLtools pca --bed RPKM_all.bed.gz --scale --center --out /home/rstudio/Results/
 QTLtools pca --vcf GENOTYPES.vcf.gz --scale --center --maf 0.05 --distance 50000 --out genotypes_pca 
 
 #[cis_nominal]
+## Firts we get the data
+
+# Get the files for the cis analysiis
+cd /home/rstudio/Bed-Seq
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
+
+# Rename them
+
+mv genes.50percent.chr22.bed.gz /home/rstudio/Results/cis_nominal/RPKM_all.bed.gz
+
+mv genes.50percent.chr22.bed.gz.tbi /home/rstudio/Results/cis_nominal/RPKM_all.bed.gz.tbi
+
+mv genotypes.chr22.vcf.gz /home/rstudio/Results/cis_nominal/GENOTYPES.vcf.gz
+
+mv genotypes.chr22.vcf.gz.tbi /home/rstudio/Results/cis_nominal/GENOTYPES.vcf.gz.tbi
+
+mv genes.covariates.pc50.txt.gz /home/rstudio/Results/cis_nominal/COV.txt.gz
 
 cd /home/rstudio/Results/cis_nominal
 
@@ -86,6 +112,7 @@ QTLtools cis \
   --nominal 0.01 \
   --region chr22:17000000-18000000 \
   --out nominals.txt
+
 
 #Compile Report
 cd /home/rstudio
