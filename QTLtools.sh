@@ -91,8 +91,6 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
 
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
 
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
-
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
 # Rename them
@@ -102,8 +100,6 @@ mv genes.50percent.chr22.bed.gz /home/rstudio/Results/cis_nominal/RPKM_all.bed.g
 mv genes.50percent.chr22.bed.gz.tbi /home/rstudio/Results/cis_nominal/RPKM_all.bed.gz.tbi
 
 mv genotypes.chr22.vcf.gz /home/rstudio/Results/cis_nominal/GENOTYPES.vcf.gz
-
-mv genotypes.chr22.vcf.gz.tbi /home/rstudio/Results/cis_nominal/GENOTYPES.vcf.gz.tbi
 
 mv genes.covariates.pc50.txt.gz /home/rstudio/Results/cis_nominal/COV.txt.gz
 
