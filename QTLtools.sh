@@ -115,7 +115,7 @@ QTLtools pca
 
 
 QTLtools cis \
-  --vcf genotypes.chr22.vcf.gz \
+  --vcf Genotypes.vcf.gz \
   --bed RPKM_all.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
