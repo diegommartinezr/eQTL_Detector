@@ -63,15 +63,18 @@ QTLtools quan \
   --bam $z \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
   --sample "${z%.chr22.bam}" \
-  --out-prefix /home/rstudio/Results/quan/$z\
+  --out-prefix /home/rstudio/Results/quan/$z \
   --filter-mapping-quality 150 \
   --filter-mismatch 5 \
   --filter-mismatch-total 5 \
   --rpkm;
 done
 
-cd /home/rstudio/Results/quan
+####
+####
 
+cd /home/rstudio/Results/quan
+sudo apt-get update
 
 FIRST=$(ls *.gene.rpkm.bed| head -1)
 
@@ -81,13 +84,15 @@ paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_va
 
 paste RPKM.bed RPKM_values.bed > RPKM_all.bed
 
-mv RPKM_all.bed.gz /home/rstudio/Bed-Seq/RPKM_all.bed
+mv RPKM_all.bed /home/rstudio/Bed-Seq/RPKM_all.bed
 
 cd /home/rstudio/Bed-Seq
 
 bgzip RPKM_all.bed && tabix -p bed RPKM_all.bed.gz 
 
 
+####
+####
 
 #####################################################################################################################################
 #####################################################################################################################################
