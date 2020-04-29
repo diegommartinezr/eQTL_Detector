@@ -72,11 +72,11 @@ done
 
 
 for t in *count.bed;do
-mv $t /home/studio/Results/quan/$t
+mv $t /home/rstudio/Results/quan/$t
 done
 
 for p in *rpkm.bed;do
-mv $p /home/studio/Results/quan/$p
+mv $p /home/rstudio/Results/quan/$p
 done
 
 ####
