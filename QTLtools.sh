@@ -42,7 +42,6 @@ done
 
 ######################################################################################################################################
 ######################################################################################################################################
-
 #[match] to ensure good matching between sequence and genotype data
 
 for c in *.bam; do
@@ -55,38 +54,21 @@ done
 
 #####################################################################################################################################
 #####################################################################################################################################
-
 #[quan] to quantify gene expression
 
-for d in *.bam;do
+cd /home/rstudio/Bed-Seq
+
+for z in *.bam;do
 QTLtools quan \
-  --bam $d \
+  --bam $z \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
-  --sample "${d%.chr22.bam}" \
-  --out-prefix $d \
+  --sample "${z%.chr22.bam}" \
+  --out-prefix /home/rstudio/Results/quan/$z\
   --filter-mapping-quality 150 \
   --filter-mismatch 5 \
   --filter-mismatch-total 5 \
   --rpkm;
 done
-
-
-for f in *gene.rpkm.bed;do
-mv $f /home/rstudio/Results/quan/$f
-done
-
-for g in *exon.rpkm.bed;do
-mv $g /home/rstudio/Results/quan/$g
-done
-
-for h in *gene.count.bed;do
-mv $h /home/rstudio/Results/quan/$h
-done
-
-for i in *exon.count.bed;do
-mv $i /home/rstudio/Results/quan/$i
-done
-
 
 cd /home/rstudio/Results/quan
 
@@ -129,9 +111,6 @@ QTLtools pca
 
 #[cis_nominal]
 
-cd /home/rstudio/Bed-Seq
-
-
 
 QTLtools cis \
   --vcf genotypes.chr22.vcf.gz \
@@ -144,6 +123,7 @@ QTLtools cis \
 
 
 #Compile Report
+
 cd /home/rstudio
 
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
