@@ -4,7 +4,6 @@ services:
     build: .
     image: martindi/eqtldetector
     environment:
-        EXAMPLE_ENV: 'Changed environment value'
         PASSWORD: password
     volumes:
       - ./Data:/home/rstudio/Data:rw

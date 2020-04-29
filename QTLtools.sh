@@ -1,40 +1,52 @@
 # running some analysis with the published QTLtools dummy data
 
 #[bamstat] to control the quality of the sequence data
-cd /home/rstudio/Bed-Seq
-mkdir /home/rstudio/Results/bamstat
 
-#Download the test ref
+cd /home/rstudio/Bed-Seq
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
+
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
+
+
+
 
 for j in *.bam;do
 samtools index $j /home/rstudio/Bed-Seq/$j.bai;
 done
 
-for k in *.bam;do
-QTLtools bamstat --bam $k --bed gencode.v19.exon.chr22.bed.gz --filter-mapping-quality 150 --out $k.txt;
-done
 
-for k in *.txt;do
-mv $k /home/rstudio/Results/bamstat
+for k in *.bam;do
+QTLtools bamstat \ 
+  --bam $k \
+  --bed gencode.v19.exon.chr22.bed.gz \
+  --filter-mapping-quality 150 \
+  --out /home/rstudio/Results/bamstat$k.txt;
 done
 
 
 #[match] to ensure good matching between sequence and genotype data
 
 
-##I'm goingfg to download the data for a momment to see how to get the index with vcf tools or somethig like.
-
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
-
 for k in *.bam;do
-QTLtools mbv --bam $k --vcf genotypes.chr22.vcf.gz --filter-mapping-quality 150 --out mbv_$k.txt
+QTLtools mbv \
+  --bam $k \
+  --vcf genotypes.chr22.vcf.gz \
+  --filter-mapping-quality 150 \
+  --out /home/rstudio/Results/mbv$k.txt
 done
 
-for k in mbv_*;do
-mv $k /home/rstudio/Results/mbv
-done
+
+
+
+
+
+
+
 
 #[quan] to quantify gene expression
 
