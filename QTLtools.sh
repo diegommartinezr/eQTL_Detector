@@ -14,29 +14,29 @@ wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 
 
-for j in *.bam;do
-samtools index $j /home/rstudio/Bed-Seq/$j.bai;
+for a in *.bam;do
+samtools index $a /home/rstudio/Bed-Seq/$a.bai;
 done
 
 
-for k in *.bam;do
+for b in *.bam;do
 QTLtools bamstat \ 
-  --bam $k \
+  --bam $b \
   --bed gencode.v19.exon.chr22.bed.gz \
   --filter-mapping-quality 150 \
-  --out /home/rstudio/Results/bamstat/$k.txt;
+  --out /home/rstudio/Results/bamstat/$b.txt;
 done
 
 
 #[match] to ensure good matching between sequence and genotype data
 
 
-for k in *.bam;do
+for c in *.bam;do
 QTLtools mbv \
-  --bam $k \
+  --bam $c \
   --vcf genotypes.chr22.vcf.gz \
   --filter-mapping-quality 150 \
-  --out /home/rstudio/Results/mbv$k.txt
+  --out /home/rstudio/Results/mbv$c.txt
 done
 
 
@@ -45,17 +45,18 @@ done
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
-for k in *.bam;do
+for d in *.bam;do
 QTLtools quan \
-  --bam $k \
+  --bam $d \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
-  --sample "${k%.chr22.bam}" \
-  --out-prefix /home/rstudio/Results/quan/$k \
+  --sample "${d%.chr22.bam}" \
+  --out-prefix $d \
   --filter-mapping-quality 150 \
   --filter-mismatch 5 \
   --filter-mismatch-total 5 \
   --rpkm 
 done
+
 
 
 cd /home/rstudio/Results/quan
