@@ -8,40 +8,27 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
 
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
-wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
-
 
 #indexing
-
-tabix -p gff genotypes.chr22.vcf.gz
-
 
 for a in *.bam;do
 samtools index $a /home/rstudio/Bed-Seq/$a.bai;
 done
 
-#[bamstat]
 
 for b in *.bam;do 
 QTLtools bamstat \
   --bam $b \
   --bed gencode.v19.exon.chr22.bed.gz \
   --filter-mapping-quality 150 \
-  --out Resutl_bamstat$b.txt;
+  --out /home/rstudio/Results/bamstat/$b.txt;
 done
-
-## Move the results
-
-for e in *Resutl_bamstat.bam.txt;do 
-mv $e /home/rstudio/Results/bamstat/$e;
-done
-
-
-
 
 
 #[match] to ensure good matching between sequence and genotype data
@@ -52,19 +39,17 @@ QTLtools mbv \
   --bam $c \
   --vcf genotypes.chr22.vcf.gz \
   --filter-mapping-quality 150 \
-  --out /home/rstudio/Results/mbv$c.txt;
+  --out /home/rstudio/Results/mvb $c.txt;
 done
 
 
 
 #[quan] to quantify gene expression
 
-
-
 for d in *.bam;do
 QTLtools quan \
   --bam $d \
-  --gtf /home/rstudio/Bed-Seq/gencode.v19.annotation.chr22.gtf.gz \
+  --gtf gencode.v19.annotation.chr22.gtf.gz \
   --sample "${d%.chr22.bam}" \
   --out-prefix $d \
   --filter-mapping-quality 150 \
@@ -73,7 +58,12 @@ QTLtools quan \
   --rpkm;
 done
 
+for f in *gene.rpkm.bed;do
+mv $f /home/rstudio/Results/quan/$f
+done
+
 cd /home/rstudio/Results/quan
+
 
 FIRST=$(ls *.gene.rpkm.bed| head -1)
 
