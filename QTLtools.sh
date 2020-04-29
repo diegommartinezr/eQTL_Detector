@@ -81,11 +81,13 @@ paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_va
 
 paste RPKM.bed RPKM_values.bed > RPKM_all.bed
 
-bgzip RPKM_all.bed  && tabix -p bed RPKM_all.bed.gz 
-
-mv RPKM_all.bed.gz /home/rstudio/Bed-Seq/RPKM_all.bed.gz
+mv RPKM_all.bed.gz /home/rstudio/Bed-Seq/RPKM_all.bed
 
 cd /home/rstudio/Bed-Seq
+
+bgzip RPKM_all.bed && tabix -p bed RPKM_all.bed.gz 
+
+
 
 #####################################################################################################################################
 #####################################################################################################################################
