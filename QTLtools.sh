@@ -14,7 +14,6 @@ wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 
 
-
 for j in *.bam;do
 samtools index $j /home/rstudio/Bed-Seq/$j.bai;
 done
@@ -72,6 +71,7 @@ paste RPKM.bed RPKM_values.bed > RPKM_all.bed
 
 bgzip RPKM_all.bed  && tabix -p bed RPKM_all.bed.gz 
 
+mv RPKM_all.bed.gz /home/rstudio/Bed-Seq/RPKM_all.bed.gz
 
 #[pca]
 
@@ -97,14 +97,14 @@ cd /home/rstudio/Bed-Seq
 
 #Tabinx indexing VCF file
 
-tabix -p gff GENOTYPES.vcf.gz
+tabix -p gff genotypes.chr22.vcf.gz
 
 #bcftools view GENOTYPES.vcf.gz  | less -S 
 
 QTLtools cis \
   --vcf genotypes.chr22.vcf.gz \
-  --bed /home/rstudio/Results/quan/RPKM_all.bed.gz \
-  --cov /home/rstudio/Bed-Seq/COV.txt.gz \
+  --bed RPKM_all.bed.gz \
+  --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
   --region chr22:17000000-18000000 \
   --out nominals.txt
