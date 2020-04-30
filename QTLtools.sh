@@ -82,12 +82,29 @@ done
 ####
 ####
 
+####
+####
+
 cd /home/rstudio/Results/quan
-sudo apt-get update
 
 FIRST=$(ls *.gene.rpkm.bed| head -1)
 
 cut -f 1-6 $FIRST >RPKM.bed
+
+
+mkdir stat
+
+for d in *.exon.rpkm.bed;do
+mv $d /home/rstudio/Results/quan/stat/$d
+done
+
+for d in *.exon.count.bed;do
+mv $d /home/rstudio/Results/quan/stat/$d
+done
+
+for d in *.gene.count.bed;do
+mv $d //home/rstudio/Results/quan/stat/$d
+done
 
 paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
 
@@ -113,17 +130,9 @@ QTLtools pca \
   --bed RPKM_all.bed.gz \
   --scale \
   --center \
-  --out /home/rstudio/Results/pca/RPKM.bed
+  --out /home/rstudio/Results/pca/pca.Exp.txt
 
-
-QTLtools pca 
-  --vcf GENOTYPES.vcf.gz \
-  --scale \
-  --center \
-  --maf 0.05 \
-  --distance 50000 \
-  --out genotypes_pca 
-
+QTLtools pca --vcf Genotypes.vcf.gz --scale --center --maf 0.05 --distance 50000 --out /home/rstudio/Results/pca/Genotypes_pca.txt
 
 #[cis_nominal]
 
