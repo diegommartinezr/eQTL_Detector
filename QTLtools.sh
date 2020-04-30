@@ -142,34 +142,54 @@ QTLtools pca \
   --distance 50000 \
   --out /home/rstudio/Results/pca/Genotypes_pca.txt
 
-
 #####################################################################################################################################
 #####################################################################################################################################
 #[cis_nominal]
 
-QTLtools cis \
-  --vcf Genotypes.vcf.gz \
+
+cd /hone/rstudio/Bed-Seq
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
+
+ QTLtools cis \
+  --vcf genotypes.chr22.vcf.gz \
   --bed genes.50percent.chr22.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
-  --region \
   --out /home/rstudio/Results/cis_nominal/nominals.txt
-
+  
 #####################################################################################################################################
 #####################################################################################################################################
 #[trans_full]
 
 mkdir /home/rstudio/Results/trans_full
 
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
 QTLtools trans \
   --vcf genotypes.chr22.vcf.gz \
   --bed genes.simulated.chr22.bed.gz \
-  --nominal --threshold 1e-5 \
+  --nominal \
+  --threshold 1e-5 \
   --out /home/rstudio/Results/trans_full.trans.nominal 
+
+
+
 
 #####################################################################################################################################
 #####################################################################################################################################
-#[trans_full]
+                                                        #################
+#####################################################################################################################################
+#####################################################################################################################################
+
 
 #Compile Report
 
@@ -177,4 +197,5 @@ cd /home/rstudio
 
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
 mv Report.pdf /home/rstudio/Results/Report
-  
+
+
