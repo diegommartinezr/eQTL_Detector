@@ -6,6 +6,8 @@ cd /home/rstudio/Bed-Seq
 
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
+
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
@@ -13,6 +15,11 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
+
 
 #Indexing.vcf.gz
 
@@ -122,8 +129,6 @@ bgzip RPKM_all.bed && tabix -p bed RPKM_all.bed.gz
 
 #####################################################################################################################################
 #####################################################################################################################################
-
-
 #[pca]
 
 QTLtools pca \
@@ -132,20 +137,41 @@ QTLtools pca \
   --center \
   --out /home/rstudio/Results/pca/pca.Exp.txt
 
-QTLtools pca --vcf Genotypes.vcf.gz --scale --center --maf 0.05 --distance 50000 --out /home/rstudio/Results/pca/Genotypes_pca.txt
+QTLtools pca \
+  --vcf Genotypes.vcf.gz \
+  --scale --center \
+  --maf 0.05 \
+  --distance 50000 \
+  --out /home/rstudio/Results/pca/Genotypes_pca.txt
 
+
+#####################################################################################################################################
+#####################################################################################################################################
 #[cis_nominal]
-
 
 QTLtools cis \
   --vcf Genotypes.vcf.gz \
-  --bed RPKM_all.bed.gz \
+  --bed genes.50percent.chr22.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
   --region chr22:17000000-18000000 \
-  --out nominals.txt
+  --out /home/rstudio/Results/cis_nominal/nominals.txt
 
+#####################################################################################################################################
+#####################################################################################################################################
+#[trans_full]
 
+mkdir /home/rstudio/Results/trans_full
+
+QTLtools trans \
+  --vcf genotypes.chr22.vcf.gz \
+  --bed genes.simulated.chr22.bed.gz \
+  --nominal --threshold 1e-5 \
+  --out /home/rstudio/Results/trans_full.trans.nominal 
+
+#####################################################################################################################################
+#####################################################################################################################################
+#[trans_full]
 
 #Compile Report
 
