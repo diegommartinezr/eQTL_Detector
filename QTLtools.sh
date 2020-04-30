@@ -1,4 +1,5 @@
-# running some analysis with the published QTLtools dummy data
+######################################################################################################################################
+######################################################################################################################################
 
 #[bamstat] to control the quality of the sequence data
 
@@ -89,9 +90,6 @@ done
 ####
 ####
 
-####
-####
-
 cd /home/rstudio/Results/quan
 
 FIRST=$(ls *.gene.rpkm.bed| head -1)
@@ -154,7 +152,7 @@ QTLtools cis \
   --bed genes.50percent.chr22.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
-  --region chr22:17000000-18000000 \
+  --region \
   --out /home/rstudio/Results/cis_nominal/nominals.txt
 
 #####################################################################################################################################
@@ -179,4 +177,4 @@ cd /home/rstudio
 
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
 mv Report.pdf /home/rstudio/Results/Report
-
+  
