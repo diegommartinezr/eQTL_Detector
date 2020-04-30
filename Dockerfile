@@ -9,5 +9,4 @@ RUN mkdir /home/rstudio/Results/pca
 RUN mkdir /home/rstudio/Results/cis_nominal
 
 COPY eQTL_Detector_Report.Rmd /home/rstudio/eQTL_Detector_Report.Rmd
-COPY quan.R /home/rstudio/quan.R
 COPY QTLtools.sh /home/rstudio/QTLtools.sh
