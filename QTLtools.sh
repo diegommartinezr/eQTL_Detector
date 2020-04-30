@@ -103,7 +103,7 @@ mv $d /home/rstudio/Results/quan/stat/$d
 done
 
 for d in *.gene.count.bed;do
-mv $d //home/rstudio/Results/quan/stat/$d
+mv $d /home/rstudio/Results/quan/stat/$d
 done
 
 paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
