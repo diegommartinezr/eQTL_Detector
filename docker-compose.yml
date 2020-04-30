@@ -6,13 +6,12 @@ services:
     environment:
         PASSWORD: password
     volumes:
-      - ./Data:/home/rstudio/Data:rw
       - ./Bed-Seq:/home/rstudio/Bed-Seq:rw
       - ./Results:/home/rstudio/Results:rw
       - ./Results/bamstat:/home/rstudio/Results/bamstat:rw
       - ./Results/mbv:/home/rstudio/Results/mbv:rw
       - ./Results/quan:/home/rstudio/Results/quan:rw
-      - ./Results/quan:/home/rstudio/Results/pca:rw
-      - ./Results/quan:/home/rstudio/Results/cis_nominal:rw
+      - ./Results/pca:/home/rstudio/Results/pca:rw
+      - ./Results/cis_nominal:/home/rstudio/Results/cis_nominal:rw
     ports:
       - 8787:8787
