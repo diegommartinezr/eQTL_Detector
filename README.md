@@ -38,6 +38,19 @@ docker-compose version 1.21.2, build a133471
 wget https://github.com/diegommartinezr/eQTL_Detector/archive/master.zip
 ```
 
+### In case you have the usermode issue you need use
+
+```
+sudo usermode -aG docker ${USER}
+```
+And then
+
+```
+su - ${USER}
+
+```
+This last step is going to ask you for your su passwoed
+
 ## Preparing your Data
 
 This pipeline use three different data:
