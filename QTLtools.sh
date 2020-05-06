@@ -70,8 +70,8 @@ for z in *.bam;do
 QTLtools quan \
   --bam $z \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
-  --sample "${z%.chr22.bam}" \
-  --out-prefix /home/rstudio/Results/quan/$z \
+  --sample "${z%.fastq.gz.sam.bam}" \
+  --out-prefix $z \
   --filter-mapping-quality 150 \
   --filter-mismatch 5 \
   --filter-mismatch-total 5 \
