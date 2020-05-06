@@ -70,7 +70,7 @@ for z in *.bam;do
 QTLtools quan \
   --bam $z \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
-  --sample "${z%.fastq.gz.sam.bam}" \
+  --sample "${z%.bam}" \
   --out-prefix $z \
   --filter-mapping-quality 150 \
   --filter-mismatch 5 \
