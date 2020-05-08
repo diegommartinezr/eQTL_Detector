@@ -119,7 +119,7 @@ for (d in list_mbv) {
 
 ## Quantification
 
-```{r quan, echo=FALSE, message=FALSE, warning=FALSE}
+```{r quan, echo=FALSE, fig.height=12, fig.width=16, message=FALSE, warning=FALSE}
 
 library(readr)
 library(kableExtra)
@@ -139,6 +139,17 @@ list_quan <- lapply(list_quan, function(x){
 
 Results_quan_data <- do.call("rbind", lapply(list_quan, as.data.frame))
 
+
+par(mfrow=c(3,3))
+
+
+vector_quan <- colnames(Results_quan_data)
+
+for(d in vector_quan[2:10]){
+  barplot(Results_quan_data[,d],
+          main = d,
+          col = "blue")
+}
 
 
 ```
