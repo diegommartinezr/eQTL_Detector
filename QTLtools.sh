@@ -12,10 +12,6 @@ wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
 
-#Indexing.vcf.gz
-
-tabix -p vcf Genotypes.vcf.gz
-
 #indexing .bed
 
 for a in *.bam;do
@@ -31,7 +27,7 @@ for b in *.bam;do
 QTLtools bamstat \
   --bam $b \
   --bed gencode.v19.exon.chr22.bed.gz \
-  --filter-mapping-quality 150 \
+  --filter-mapping-quality 15 \
   --out /home/rstudio/Results/bamstat/$b.txt;
 done
 
