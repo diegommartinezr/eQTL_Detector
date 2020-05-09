@@ -98,7 +98,7 @@ plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mappe
 ```
 
 
-## [mbv]: Matching data.
+## Matching data.
 
 
 ```{r mbv, echo=FALSE, fig.width=9, message=FALSE, warning=FALSE, paged.print=TRUE}
@@ -176,19 +176,6 @@ for(d in vector_quan[2:10]){
 }
 
 
+
 ```
-
-
-
-
-
-
-
-
-
-# Cis summary
-
-
-# Trans summary
-
 
