@@ -5,29 +5,16 @@
 
 cd /home/rstudio/Bed-Seq
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
-
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
-
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
-
 
 #Indexing.vcf.gz
 
-mv genotypes.chr22.vcf.gz /home/rstudio/Bed-Seq/Genotypes.vcf.gz
-
-tabix -p gff Genotypes.vcf.gz
-
+tabix -p vcf Genotypes.vcf.gz
 
 #indexing .bed
 
