@@ -48,15 +48,18 @@ QTLtools bamstat \
   --out /home/rstudio/Results/bamstat/$b.txt;
 done
 
+
 ######################################################################################################################################
 ######################################################################################################################################
 #[match] to ensure good matching between sequence and genotype data
+
+cd /home/rstudio/Bed-Seq
 
 for c in *.bam; do
 QTLtools mbv \
 --bam $c \
 --vcf Genotypes.vcf.gz \
---filter-mapping-quality 150 \
+--filter-mapping-quality 1 \
 --out /home/rstudio/Results/mbv/$c.txt;
 done
 
@@ -72,9 +75,9 @@ QTLtools quan \
   --gtf gencode.v19.annotation.chr22.gtf.gz \
   --sample "${z%.bam}" \
   --out-prefix $z \
-  --filter-mapping-quality 150 \
-  --filter-mismatch 5 \
-  --filter-mismatch-total 5 \
+  --filter-mapping-quality 1 \
+  --filter-mismatch 1 \
+  --filter-mismatch-total 1 \
   --rpkm;
 done
 
@@ -149,14 +152,10 @@ QTLtools pca \
 
 cd /hone/rstudio/Bed-Seq
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
  QTLtools cis \
-  --vcf genotypes.chr22.vcf.gz \
+  --vcf Genotypes.vcf.gz \
   --bed genes.50percent.chr22.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
   --nominal 0.01 \
@@ -195,7 +194,5 @@ QTLtools trans \
 
 cd /home/rstudio
 
-R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.pdf')"
-mv Report.pdf /home/rstudio/Results/Report
-
-
+R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.html')"
+mv Report.html /home/rstudio/Results/Report.html
