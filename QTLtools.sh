@@ -143,8 +143,8 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
  QTLtools cis \
   --vcf Genotypes.vcf.gz \
-  --bed genes.50percent.chr22.bed.gz \
-  --cov genes.covariates.pc50.txt.gz \
+  --bed RPKM_all.bed.gz \
+  --cov Cov.txt \
   --nominal 0.01 \
   --out /home/rstudio/Results/cis_nominal/nominals.txt
   
