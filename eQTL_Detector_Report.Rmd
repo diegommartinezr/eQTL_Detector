@@ -54,6 +54,30 @@ for(d in colnames(Results_bamstat)){
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, paged.print=FALSE}
 
+
+home <- getwd()
+Results_bamstat <- file.path(home,"Results/bamstat")
+
+list_bamstat <- list.files(path = Results_bamstat)
+
+setwd(Results_bamstat)
+list_bamstatII <- lapply(list_bamstat, function(x){
+  read.table(file = x, 
+             quote="\"", 
+             comment.char="")
+  })
+
+
+
+Results_bamstat <- do.call("rbind", lapply(list_bamstatII, as.data.frame))
+rownames(Results_bamstat) <- list_bamstat
+colnames(Results_bamstat) <- c("Number of sequence reads",
+                               "Number of mapped reads",
+                               "Mapped reads annotated",
+                               "Number of anotations",
+                               "Number of covered annotations by at least one sequence")
+
+
 par(mfrow=c(1,3))
 
 plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`,
