@@ -153,15 +153,11 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
 mkdir /home/rstudio/Results/trans_full
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
-
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+cd /hone/rstudio/Bed-Seq
 
 QTLtools trans \
-  --vcf genotypes.chr22.vcf.gz \
-  --bed genes.simulated.chr22.bed.gz \
+  --vcf Genotypes.vcf.gz \
+  --bed RPKM_all.bed.gz \
   --nominal \
   --threshold 1e-5 \
   --out /home/rstudio/Results/trans_full.trans.nominal 
