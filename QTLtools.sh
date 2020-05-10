@@ -80,10 +80,10 @@ done
 
 cd /home/rstudio/Results/quan
 
-FIRST=$(ls *.gene.rpkm.bed| head -1)
+###
 
-cut -f 1-6 $FIRST >RPKM.bed
 
+###
 
 mkdir stat
 
@@ -99,9 +99,17 @@ for d in *.gene.count.bed;do
 mv $d /home/rstudio/Results/quan/stat/$d
 done
 
-paste *.bed| awk '{i=7;while($i){printf("%s ",$i);i+=7}printf("\n")}' >> RPKM_values.bed
+###
 
-paste RPKM.bed RPKM_values.bed > RPKM_all.bed
+FIRST=$(ls *.gene.rpkm.bed| head -1)
+
+cut -f 1-6 $FIRST >RPKM.txt
+
+for u in in *.gene.rpkm.bed;do
+cut -f 7 $u > $u.values.txt;
+done
+
+paste RPKM.txt *values.txt > RPKM_all.bed
 
 mv RPKM_all.bed /home/rstudio/Bed-Seq/RPKM_all.bed
 
