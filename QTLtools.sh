@@ -5,8 +5,6 @@
 
 cd /home/rstudio/Bed-Seq
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
-
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
@@ -145,7 +143,7 @@ wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
   --bed RPKM_all.bed.gz \
   --cov Cov.txt \
   --nominal 0.01 \
-  --out /home/rstudio/Results/cis_nominal/nominals.txt
+  --out nominals.txt
   
 #####################################################################################################################################
 #####################################################################################################################################
@@ -160,17 +158,13 @@ QTLtools trans \
   --bed RPKM_all.bed.gz \
   --nominal \
   --threshold 1e-5 \
-  --out /home/rstudio/Results/trans_full.trans.nominal 
-
-
-
+  --out full.trans.nominal 
 
 #####################################################################################################################################
 #####################################################################################################################################
                                                         #################
 #####################################################################################################################################
 #####################################################################################################################################
-
 
 #Compile Report
 
