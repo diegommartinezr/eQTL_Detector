@@ -82,9 +82,6 @@ cd /home/rstudio/Results/quan
 
 ###
 
-
-###
-
 mkdir stat
 
 for d in *.exon.rpkm.bed;do
