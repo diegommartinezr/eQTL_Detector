@@ -25,13 +25,13 @@ tabix -p vcf Genotypes.vcf.gz
 
 #[bamstat] to control the quality of the sequence data
 
-#for b in *.bam;do 
-#QTLtools bamstat \
-#  --bam $b \
-#  --bed gencode.v19.exon.chr22.bed.gz \
-#  --filter-mapping-quality 15 \
-#  --out /home/rstudio/Results/bamstat/$b.txt;
-#done
+for b in *.bam;do 
+QTLtools bamstat \
+  --bam $b \
+  --bed gencode.v19.exon.chr22.bed.gz \
+  --filter-mapping-quality 15 \
+  --out /home/rstudio/Results/bamstat/$b.txt;
+done
 
 
 ######################################################################################################################################
