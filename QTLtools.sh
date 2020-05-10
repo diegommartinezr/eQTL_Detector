@@ -12,11 +12,14 @@ wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.exon.chr22.bed.gz
 wget http://jungle.unige.ch/QTLtools_examples/gencode.v19.annotation.chr22.gtf.gz
 
 
-#indexing .bed
+#indexing .bed and VCF
 
 for a in *.bam;do
 samtools index $a /home/rstudio/Bed-Seq/$a.bai;
 done
+
+tabix -p vcf Genotypes.vcf.gz
+
 
 ######################################################################################################################################
 ######################################################################################################################################
