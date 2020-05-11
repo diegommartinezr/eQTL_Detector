@@ -236,10 +236,6 @@ plot(prop_var, type = "o",
 
 ############# scree plot
 
-home <- getwd()
-Results_pca<- file.path(home,"Results/pca")
-setwd(Results_pca)
-
 pca_geno_stat <- as.matrix(Genotypes_pca_stat[,-1])
 
 pca_geno_stat <- t(pca_geno_stat)
