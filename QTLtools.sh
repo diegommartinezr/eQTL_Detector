@@ -142,14 +142,40 @@ QTLtools pca \
 
 cd /hone/rstudio/Bed-Seq
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
  QTLtools cis \
   --vcf Genotypes.vcf.gz \
   --bed RPKM_all.bed.gz \
   --cov Cov.txt \
   --nominal 0.01 \
+  --out /home/rstudio/Results/cis_nominal/nominals.txt
+
+
+
+####### usgin dummy data from the author
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
+
+
+QTLtools cis \
+  --vcf genotypes.chr22.vcf.gz \
+  --bed genes.50percent.chr22.bed.gz \
+  --cov genes.covariates.pc50.txt.gz \
+  --nominal 0.01 \
+  --region chr22:17000000-18000000 \
   --out nominals.txt
+
+
+
+
   
 #####################################################################################################################################
 #####################################################################################################################################
