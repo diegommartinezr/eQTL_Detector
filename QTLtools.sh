@@ -262,12 +262,13 @@ cd /hone/rstudio/Bed-Seq
 
 wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
 wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
-
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tni
 
 QTLtools trans \ 
   --vcf genotypes.chr22.vcf.gz \ 
   --bed genes.simulated.chr22.bed.gz \ 
-  --nominal \ 
+  --nominal 0.001\ 
   --threshold 1e-5 \ 
   --out /home/rstudio/Results/trans/trans.nominal 
 
@@ -275,7 +276,8 @@ QTLtools trans \
   --vcf genotypes.chr22.vcf.gz \ 
   --bed genes.simulated.chr22.bed.gz \ 
   --threshold 1e-5 \ 
-  --permute --out trans.perm123 \ 
+  --permute 1000^ \
+  --out trans.perm123 \ 
   --seed 123 
 
 #####################################################################################################################################
