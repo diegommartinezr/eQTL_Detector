@@ -143,21 +143,21 @@ QTLtools pca \
 cd /hone/rstudio/Bed-Seq
 
 
- QTLtools cis \
-  --vcf Genotypes.vcf.gz \
-  --bed RPKM_all.bed.gz \
-  --cov Cov.txt \
-  --nominal 0.01 \
-  --out /home/rstudio/Results/cis_nominal/nominals.txt
+# QTLtools cis \
+#  --vcf Genotypes.vcf.gz \
+#  --bed RPKM_all.bed.gz \
+#  --cov Cov.txt \
+#  --nominal 0.01 \
+#  --out /home/rstudio/Results/cis_nominal/nominals.txt
 
 
 
- QTLtools cis \
-  --vcf Genotypes.vcf.gz \
-  --bed RPKM_all.bed.gz \
-  --cov Cov.txt \
-  --permute 1000 \
-  --out /home/rstudio/Results/cis_nominal/permutation.txt
+# QTLtools cis \
+#  --vcf Genotypes.vcf.gz \
+#  --bed RPKM_all.bed.gz \
+#  --cov Cov.txt \
+#  --permute 1000 \
+#  --out /home/rstudio/Results/cis_nominal/permutation.txt
 
 
 
@@ -165,39 +165,37 @@ cd /hone/rstudio/Bed-Seq
 ### Step1: Run the permutation pass
 
 
-for j in $(seq 1 16); do
-  echo "cis --vcf Genotypes.vcf.gz --bed RPKM_all.bed.gz --cov Cov.txt --permute 200 --chunk $j 16 --out permutations_$j\_16.txt";
-done | xargs -P4 -n14 QTLtools
+#for j in $(seq 1 16); do
+#  echo "cis --vcf Genotypes.vcf.gz --bed RPKM_all.bed.gz --cov Cov.txt --permute 200 --chunk $j 16 --out permutations_$j\_16.txt";
+#done | xargs -P4 -n14 QTLtools
 
 
-cat permutations_*.txt | gzip -c > permutations_all.txt.gz
-Rscript ./script/runFDR_cis.R permutations_all.txt.gz 0.05 permutations_all
+#cat permutations_*.txt | gzip -c > permutations_all.txt.gz
+#Rscript ./script/runFDR_cis.R permutations_all.txt.gz 0.05 permutations_all
 
 
 
-QTLtools cis 
---vcf Genotypes.vcf.gz \
---bed RPKM_all.bed.gz \
---cov Cov.txt \
---mapping permutations_all.thresholds.txt 
---chunk 12 16 
---out conditional_12_16.txt
+#QTLtools cis 
+#--vcf Genotypes.vcf.gz \
+#--bed RPKM_all.bed.gz \
+#--cov Cov.txt \
+#--mapping permutations_all.thresholds.txt 
+#--chunk 12 16 
+#--out conditional_12_16.txt
 
 
-cat conditional_full.txt | awk '{ if ($19 == 1) print $0}' > conditional_top_variants.txt
+#cat conditional_full.txt | awk '{ if ($19 == 1) print $0}' > conditional_top_variants.txt
 
 
 
 ####### usgin dummy data from the author
 
+cd /hone/rstudio/Bed-Seq
+
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz.tbi
-
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
-
 wget http://jungle.unige.ch/QTLtools_examples/genes.covariates.pc50.txt.gz
 
 
@@ -207,29 +205,15 @@ QTLtools cis \
   --cov genes.covariates.pc50.txt.gz \
   --permute 1000 \
   --region chr22:17000000-18000000 \
-  --out /home/rstudio/Results/cis_nominal/permutation_dum.txt
+  --out /home/rstudio/Results/cis_nominal/permutation.txt
 
 QTLtools cis \
   --vcf genotypes.chr22.vcf.gz \
   --bed genes.50percent.chr22.bed.gz \
   --cov genes.covariates.pc50.txt.gz \
-  --nominal 0.01 \
+  --nominal 0.0001 \
   --region chr22:17000000-18000000 \
-  --out /home/rstudio/Results/cis_nominal/nominals_dum.txt
-
-
-
-for j in $(seq 1 16); do
-  echo "cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 200 --chunk $j 16 --out permutations_$j\_16.txt";
-done | xargs -P4 -n14 QTLtools
-
-
-cat permutations_*.txt | gzip -c > permutations_all.txt.gz
-Rscript ./script/runFDR_cis.R permutations_all.txt.gz 0.05 permutations_all
-
-QTLtools cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --mapping permutations_all.thresholds.txt --chunk 12 16 --out conditional_12_16.txt
-
-cat conditional_full.txt | awk '{ if ($19 == 1) print $0}' > conditional_top_variants.txt
+  --out /home/rstudio/Results/cis_nominal/nominals.txt
 
 
 #####################################################################################################################################
@@ -237,55 +221,68 @@ cat conditional_full.txt | awk '{ if ($19 == 1) print $0}' > conditional_top_var
 
 #[trans_full]
 
-mkdir /home/rstudio/Results/trans_full
+#mkdir /home/rstudio/Results/trans_full
 
-cd /hone/rstudio/Bed-Seq
+#cd /hone/rstudio/Bed-Seq
 
-QTLtools trans \
-  --vcf Genotypes.vcf.gz \
-  --bed RPKM_all.bed.gz \
-  --nominal \
-  --threshold 1e-5 \
-  --out /home/rstudio/Results/trans/full.trans.nominal
-
-
-QTLtools trans  \
-  --vcf Genotypes.vcf.gz \ 
-  --bed RPKM_all.bed.gz \
-  --sample 1000 \
-  --normal \ 
-  --out full.trans.approx
+#QTLtools trans \
+#  --vcf Genotypes.vcf.gz \
+#  --bed RPKM_all.bed.gz \
+#  --nominal 0.0001 \
+#  --threshold 1e-5 \
+#  --out /home/rstudio/Results/trans/full.trans.nominal
 
 
-QTLtools trans \ 
-  --vcf Genotypes.vcf.gz \ 
-  --bed RPKM_all.bed.gz \ 
-  --adjust  \ .best.txt.gz \ 
-  --normal --threshold 0.1 \ 
-  --out trans.adjust
+#cd /hone/rstudio/Bed-Seq
 
-Rscript ./script/runFDR_atrans.R trans.adjust.best.txt.gz trans.adjust.hits.txt.gz 0.05 trans.output.txt
+#QTLtools trans  \
+#  --vcf Genotypes.vcf.gz \ 
+#  --bed RPKM_all.bed.gz \
+#  --sample 1000 \
+#  --normal \ 
+#  --out full.trans.approx
 
-mv trans.output.txt /home/rstudio/Results/trans/trans_approx.output.txt
+
+#QTLtools trans \ 
+#  --vcf Genotypes.vcf.gz \ 
+#  --bed RPKM_all.bed.gz \ 
+#  --adjust  \ .best.txt.gz \ 
+#  --normal --threshold 0.1 \ 
+#  --out trans.adjust
+
+#Rscript ./script/runFDR_atrans.R trans.adjust.best.txt.gz trans.adjust.hits.txt.gz 0.05 trans.output.txt
+
+#mv trans.output.txt /home/rstudio/Results/trans/trans_approx.output.txt
 
 
 
 ####### usgin dummy data from the author
 
+cd /hone/rstudio/Bed-Seq
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
+
+
 QTLtools trans \ 
   --vcf genotypes.chr22.vcf.gz \ 
   --bed genes.simulated.chr22.bed.gz \ 
-  --nominal --threshold 1e-5 \ 
-  --out trans.nominal_dum
+  --nominal \ 
+  --threshold 1e-5 \ 
+  --out /home/rstudio/Results/trans/trans.nominal 
 
+QTLtools trans \ 
+  --vcf genotypes.chr22.vcf.gz \ 
+  --bed genes.simulated.chr22.bed.gz \ 
+  --threshold 1e-5 \ 
+  --permute --out trans.perm123 \ 
+  --seed 123 
 
-QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.simulated.chr22.bed.gz --sample 1000 --normal --out trans.sample
+#####################################################################################################################################
+#####################################################################################################################################
+#[fdensity]
 
-QTLtools trans --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --adjust trans.sample .best.txt.gz --normal --threshold 0.1 --out trans.adjust
-
-Rscript ./script/runFDR_atrans.R trans.adjust.best.txt.gz trans.adjust.hits.txt.gz 0.05 output_dum.txt
-
-mv output_dum.txt /home/rstudio/Results/trans/output_dum.txt
+cd /home/rstudio/Results/trans/
 
 
 #####################################################################################################################################
