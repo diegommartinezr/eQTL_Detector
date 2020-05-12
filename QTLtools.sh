@@ -260,26 +260,34 @@ QTLtools cis \
 
 cd /hone/rstudio/Bed-Seq
 
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
-wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.bed.gz.tbi
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
-wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tni
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
 
-QTLtools trans \ 
-  --vcf genotypes.chr22.vcf.gz \ 
-  --bed genes.simulated.chr22.bed.gz \ 
-  --nominal 0.001\ 
-  --threshold 1e-5 \ 
-  --out /home/rstudio/Results/trans/trans.nominal 
 
-QTLtools trans \ 
-  --vcf genotypes.chr22.vcf.gz \ 
-  --bed genes.simulated.chr22.bed.gz \ 
-  --threshold 1e-5 \ 
-  --permute 1000^ \
-  --out trans.perm123 \ 
-  --seed 123 
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz.tbi
 
+
+QTLtools trans \
+  --vcf genotypes.chr22.vcf.gz \
+  --bed genes.simulated.chr22.bed.gz \
+  --nominal \
+  --threshold 1e-5 \
+  --out /home/rstudio/Results/trans/full.trans.nominal
+
+QTLtools trans \
+  --vcf genotypes.chr22.vcf.gz \
+  --bed genes.simulated.chr22.bed.gz \
+  --threshold 1e-5 \
+  --permute \
+  --out /home/rstudio/Results/trans/full.trans.permutation \
+  --seed 123
+
+cd /hone/rstudio/Results/trans
+
+for d in *.txt.gz; do
+gunzip $d;
+done
 #####################################################################################################################################
 #####################################################################################################################################
 #[fdensity]
