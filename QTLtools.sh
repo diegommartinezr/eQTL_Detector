@@ -273,27 +273,41 @@ QTLtools trans \
   --bed genes.simulated.chr22.bed.gz \
   --nominal \
   --threshold 1e-5 \
-  --out /home/rstudio/Results/trans/full.trans.nominal
+  --out trans.nominal \
 
 QTLtools trans \
   --vcf genotypes.chr22.vcf.gz \
   --bed genes.simulated.chr22.bed.gz \
   --threshold 1e-5 \
   --permute \
-  --out /home/rstudio/Results/trans/full.trans.permutation \
+  --out trans.perm123 \
   --seed 123
 
-cd /hone/rstudio/Results/trans
 
-for d in *.txt.gz; do
-gunzip $d;
-done
+
+
+
 #####################################################################################################################################
 #####################################################################################################################################
 #[fdensity]
+cd /home/rstudio/Results/cis_nominal
 
-cd /home/rstudio/Results/trans/
+wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/plotTrans.R
+wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_atrans.R
+wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_cis.R
+wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_ftrans.R
 
+wget http://jungle.unige.ch/QTLtools_examples/results.genes.full.txt.gz
+wget http://jungle.unige.ch/QTLtools_examples/TFs.encode.bed.gz
+
+Rscript runFDR_cis.R nominals.txt 0.05 results.genes 
+
+cat results.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > results.genes.significant.bed 
+
+QTLtools fdensity --qtl results.genes.significant.bed --bed TFs.encode.bed.gz --out density.TF.around.QTL.txt 
+
+R> D=read.table("density.TF.around.QTL.txt", head=FALSE, stringsAsFactors=FALSE)
+R> plot((D$V1+D$V2)/2, D$V3, type="l", xlab="Distance to QTLs", ylab="#annotations/kb") 
 
 #####################################################################################################################################
 #####################################################################################################################################
