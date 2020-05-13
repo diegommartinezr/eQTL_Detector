@@ -252,3 +252,64 @@ plot(cumm_comp, type = "o",
      xlab = "Principal component")
 
 ```
+
+## Cis nominal
+
+
+```{r}
+
+library(knitr)
+library(readr)
+
+home <- getwd()
+
+Results_cis_nominal<- file.path(home,"Results/cis_nominal")
+
+nominals <- read_table2("Results/cis_nominal/nominals.txt", 
+    col_names = FALSE)
+
+
+colnames_cis_nominal <- c("phenotype ID",
+                          "chromosome ID",
+                          "start position",
+                          "end position",
+                          "strand orientation",
+                          "number of variants in cis",
+                          "distance phenotype to variant",
+                          "ID of the tested variant",
+                          "chromosome ID of the variant",
+                          "start position of the variant",
+                          "end position of the variant",
+                          "nominal P-value",
+                          "regression slope",
+                          "binary")
+
+
+colnames(nominals) <- colnames_cis_nominal
+
+
+plot(density(nominals$`nominal P-value`), frame = F,
+     col = "blue",
+     main = "PDF of the nominal p-values")
+
+export_nominal.bed <- as.data.frame(cbind(nominals$`chromosome ID`,
+                                      nominals$`start position`,
+                                      nominals$`end position`,
+                                      nominals$`ID of the tested variant`,
+                                      nominals$`phenotype ID`,
+                                      nominals$`strand orientation`))
+
+
+write.table( export_nominal.bed, file = "cis_nomina.bed", sep=" ",  col.names=FALSE)
+
+
+
+```
+
+
+
+
+
+
+
+
