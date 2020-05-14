@@ -289,25 +289,66 @@ QTLtools trans \
 
 #####################################################################################################################################
 #####################################################################################################################################
-#[fdensity]
+#####[fdensity]& [fenrich]
+
 cd /home/rstudio/Results/cis_nominal
 
-wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/plotTrans.R
-wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_atrans.R
-wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_cis.R
-wget https://salsa.debian.org/med-team/qtltools/-/blob/master/script/runFDR_ftrans.R
-
 wget http://jungle.unige.ch/QTLtools_examples/results.genes.full.txt.gz
-wget http://jungle.unige.ch/QTLtools_examples/TFs.encode.bed.gz
 
-Rscript runFDR_cis.R nominals.txt 0.05 results.genes 
+#move the Rscripts
 
-cat results.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > results.genes.significant.bed 
+for f in *.R;do
+mv /home/rstudio/Bed-Seq/$f /home/rstudio/Results/cis_nominal/$f;
+done
 
-QTLtools fdensity --qtl results.genes.significant.bed --bed TFs.encode.bed.gz --out density.TF.around.QTL.txt 
+mv /home/rstudio/Bed-Seq/TF.bed.gz /home/rstudio/Results/cis_nominal/TF.bed.gz
 
-R> D=read.table("density.TF.around.QTL.txt", head=FALSE, stringsAsFactors=FALSE)
-R> plot((D$V1+D$V2)/2, D$V3, type="l", xlab="Distance to QTLs", ylab="#annotations/kb") 
+#####[fdensity]
+
+#Rscript runFDR_cis.R permutation.txt 0.0001 results.permutation.genes 
+#cat results.permutation.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > permutation.results.genes.significant.bed 
+
+# QTLtools fdensity \
+# --qtl permutation.results.genes.significant.bed \
+# --bed TF.bed.gz \
+# --out nominal_density.TF.around.QTL.txt
+
+####[fenrich]
+
+#Rscript runFDR_cis.R permutation.txt 0.0001 results.genes
+#cat results.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > results.genes.significant.bed 
+#zcat results.genes.full.txt.gz | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > results.genes.quantified.bed 
+
+#QTLtools fenrich \
+#  --qtl results.genes.significant.bed \
+#  --tss results.genes.quantified.bed \
+#  --bed TF.bed.gz \
+#  --out enrichement.QTL.in.TF.txt 
+ 
+#Using dummyData
+
+#####[fdensity]
+Rscript runFDR_cis.R results.genes.full.txt.gz 0.0001 results.permutation.genes 
+cat results.permutation.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > permutation.results.genes.significant.bed 
+
+ QTLtools fdensity \
+ --qtl permutation.results.genes.significant.bed \
+ --bed TF.bed.gz \
+ --out nominal_density.TF.around.QTL.txt
+
+####[fenrich]
+
+zcat results.genes.full.txt.gz | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > results.genes.quantified.bed 
+
+QTLtools fenrich \
+  --qtl results.genes.significant.bed \
+  --tss results.genes.quantified.bed \
+  --bed TFs.encode.bed.gz \
+  --out enrichement.QTL.in.TF.txt
+  
+
+
+ 
 
 #####################################################################################################################################
 #####################################################################################################################################
