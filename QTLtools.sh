@@ -112,7 +112,11 @@ mv RPKM_all.bed /home/rstudio/Bed-Seq/RPKM_all.bed
 
 cd /home/rstudio/Bed-Seq
 
-bgzip RPKM_all.bed && tabix -p bed RPKM_all.bed.gz 
+bedtools sort RPKM_all.bed 
+
+bgzip RPKM_all.bed
+tabix -p bed RPKM_all.bed.gz 
+
 
 
 ####
