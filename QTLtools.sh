@@ -25,13 +25,13 @@ tabix -p vcf Genotypes.vcf.gz
 
 #[bamstat] to control the quality of the sequence data
 
-for b in *.bam;do 
-QTLtools bamstat \
-  --bam $b \
-  --bed gencode.v19.exon.chr22.bed.gz \
-  --filter-mapping-quality 15 \
-  --out /home/rstudio/Results/bamstat/$b.txt;
-done
+#for b in *.bam;do 
+#QTLtools bamstat \
+#  --bam $b \
+#  --bed gencode.v19.exon.chr22.bed.gz \
+#  --filter-mapping-quality 15 \
+#  --out /home/rstudio/Results/bamstat/$b.txt;
+#done
 
 
 ######################################################################################################################################
@@ -40,13 +40,13 @@ done
 
 cd /home/rstudio/Bed-Seq
 
-for c in *.bam; do
-QTLtools mbv \
---bam $c \
---vcf Genotypes.vcf.gz \
---filter-mapping-quality 1 \
---out /home/rstudio/Results/mbv/$c.txt;
-done
+#for c in *.bam; do
+#QTLtools mbv \
+#--bam $c \
+#--vcf Genotypes.vcf.gz \
+#--filter-mapping-quality 1 \
+#--out /home/rstudio/Results/mbv/$c.txt;
+#done
 
 #####################################################################################################################################
 #####################################################################################################################################
@@ -112,8 +112,11 @@ mv RPKM_all.bed /home/rstudio/Bed-Seq/RPKM_all.bed
 
 cd /home/rstudio/Bed-Seq
 
-bgzip RPKM_all.bed
-tabix -p bed RPKM_all.bed.gz 
+sortBed -i RPKM_all.bed > RPKM_all_sorted.bed 
+
+bgzip RPKM_all_sorted.bed
+
+tabix -p bed RPKM_all_sorted.bed.gz  
 
 
 
@@ -125,7 +128,7 @@ tabix -p bed RPKM_all.bed.gz
 #[pca]
 
 QTLtools pca \
-  --bed RPKM_all.bed.gz \
+  --bed RPKM_all_sorted.bed.gz \
   --scale \
   --center \
   --out /home/rstudio/Results/pca/pca.Exp.txt
@@ -147,7 +150,7 @@ cd /hone/rstudio/Bed-Seq
 
 # QTLtools cis \
 #  --vcf Genotypes.vcf.gz \
-#  --bed RPKM_all.bed.gz \
+#  --bed RPKM_all_sorted.bed.gz \
 #  --cov Cov.txt \
 #  --nominal 0.01 \
 #  --out /home/rstudio/Results/cis_nominal/nominals.txt
@@ -156,7 +159,7 @@ cd /hone/rstudio/Bed-Seq
 
 # QTLtools cis \
 #  --vcf Genotypes.vcf.gz \
-#  --bed RPKM_all.bed.gz \
+#  --bed RPKM_all_sorted.bed.gz \
 #  --cov Cov.txt \
 #  --permute 1000 \
 #  --out /home/rstudio/Results/cis_nominal/permutation.txt
@@ -168,7 +171,7 @@ cd /hone/rstudio/Bed-Seq
 
 
 #for j in $(seq 1 16); do
-#  echo "cis --vcf Genotypes.vcf.gz --bed RPKM_all.bed.gz --cov Cov.txt --permute 200 --chunk $j 16 --out permutations_$j\_16.txt";
+#  echo "cis --vcf Genotypes.vcf.gz --bed RPKM_all_sorted.bed.gz --cov Cov.txt --permute 200 --chunk $j 16 --out permutations_$j\_16.txt";
 #done | xargs -P4 -n14 QTLtools
 
 
@@ -179,7 +182,7 @@ cd /hone/rstudio/Bed-Seq
 
 #QTLtools cis 
 #--vcf Genotypes.vcf.gz \
-#--bed RPKM_all.bed.gz \
+#--bed RPKM_all_sorted.bed.gz \
 #--cov Cov.txt \
 #--mapping permutations_all.thresholds.txt 
 #--chunk 12 16 
@@ -229,7 +232,7 @@ QTLtools cis \
 
 #QTLtools trans \
 #  --vcf Genotypes.vcf.gz \
-#  --bed RPKM_all.bed.gz \
+#  --bed RPKM_all_sorted.bed.gz \
 #  --nominal 0.0001 \
 #  --threshold 1e-5 \
 #  --out /home/rstudio/Results/trans/full.trans.nominal
@@ -239,7 +242,7 @@ QTLtools cis \
 
 #QTLtools trans  \
 #  --vcf Genotypes.vcf.gz \ 
-#  --bed RPKM_all.bed.gz \
+#  --bed RPKM_all_sorted.bed.gz \
 #  --sample 1000 \
 #  --normal \ 
 #  --out full.trans.approx
@@ -247,7 +250,7 @@ QTLtools cis \
 
 #QTLtools trans \ 
 #  --vcf Genotypes.vcf.gz \ 
-#  --bed RPKM_all.bed.gz \ 
+#  --bed RPKM_all_sorted.bed.gz \ 
 #  --adjust  \ .best.txt.gz \ 
 #  --normal --threshold 0.1 \ 
 #  --out trans.adjust
@@ -348,8 +351,6 @@ QTLtools fenrich \
   --bed TFs.encode.bed.gz \
   --out enrichement.QTL.in.TF.txt
   
-
-
  
 
 #####################################################################################################################################
