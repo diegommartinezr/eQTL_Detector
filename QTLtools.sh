@@ -91,6 +91,7 @@ done
 for d in *.exon.count.bed;do
 mv $d /home/rstudio/Results/quan/stat/$d
 done
+cat RPKM_all.bed | mawk '$1 ~ /^#/ {print $0;next} {print $0 | "sort -k1,1 -k2,2n --parallel=6"}' > RPKM_all_sorted.bed
 
 for d in *.gene.count.bed;do
 mv $d /home/rstudio/Results/quan/stat/$d
@@ -112,7 +113,7 @@ mv RPKM_all.bed /home/rstudio/Bed-Seq/RPKM_all.bed
 
 cd /home/rstudio/Bed-Seq
 
-sortBed -i RPKM_all.bed > RPKM_all_sorted.bed 
+cat RPKM_all.bed | mawk '$1 ~ /^#/ {print $0;next} {print $0 | "sort -k1,1 -k2,2n --parallel=6"}' > RPKM_all_sorted.bed
 
 bgzip RPKM_all_sorted.bed
 
@@ -126,6 +127,7 @@ tabix -p bed RPKM_all_sorted.bed.gz
 #####################################################################################################################################
 #####################################################################################################################################
 #[pca]
+cd /home/rstudio/Bed-Seq
 
 QTLtools pca \
   --bed RPKM_all_sorted.bed.gz \
