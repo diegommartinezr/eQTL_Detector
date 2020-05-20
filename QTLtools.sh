@@ -170,7 +170,6 @@ QTLtools cis \
   --out /home/rstudio/Results/cis_nominal/nominals.txt
 
 #############################################
-
 #[cis] permutation
 
 cd /home/rstudio/Results
@@ -191,7 +190,7 @@ cd /hone/rstudio/Bed-Seq
 #--bed RPKM_all_sorted.bed.gz \ 
 #--cov Cov.txt \
 #--permute 1000 \ 
-#--grp-pca1 \ 
+#--grp-/home/rstudio/Results/pca/pca.Exp.txt \ 
 #--out /home/rstudio/Results/cis_permutation/permutations.group.txt 
 
 
@@ -203,6 +202,63 @@ QTLtools cis \
   --out /home/rstudio/Results/cis_permutation/permutation.txt
 
 
+#####################################################################################################################################
+#####################################################################################################################################
+###############  trans eQTL  ##################
+
+#############################################
+#[cis] permutation
+
+cd /hone/rstudio/Results
+mkdir trans
+cd /hone/rstudio/Bed-Seq
+
+
+#1 Run a nominal pass
+
+#QTLtools trans \ 
+#--vcf Genotypes.vcf.gz \
+#--bed genes.simulated.chr22.bed.gz \
+#--nominal \
+#--threshold 1e-5 \
+#--out /hone/rstudio/Results/trans/trans.nominal 
+
+#2 Run a permutation pass
+
+#QTLtools trans \
+#--vcf Genotypes.vcf.gz \
+#--bed genes.simulated.chr22.bed.gz \
+#--threshold 1e-5 \
+#--permute \
+#-out /hone/rstudio/Results/trans/trans.nominal \
+#--seed 123 
+
+### Usging dumy data
+#1 Run a nominal pass
+
+
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.simulated.chr22.bed.gz.tbi
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
+wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
+
+
+QTLtools trans \ 
+--vcf genotypes.chr22.vcf.gz \
+--bed genes.simulated.chr22.bed.gz \
+--nominal \
+--threshold 1e-5 \
+--out /hone/rstudio/Results/trans/trans.nominal 
+
+#2 Run a permutation pass
+
+QTLtools trans \
+--vcf genotypes.chr22.vcf.gz \
+--bed genes.simulated.chr22.bed.gz \
+--threshold 1e-5 \
+--permute \
+--out /hone/rstudio/Results/trans/trans.nominal \
+--seed 123 
 
 #####################################################################################################################################
 #####################################################################################################################################
