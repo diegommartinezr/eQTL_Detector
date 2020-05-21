@@ -240,7 +240,7 @@ QTLtools trans \
 --bed genes.simulated.chr22.bed.gz \
 --nominal \
 --threshold 1e-5 \
---out trans.nominal
+--out /home/rstudio/Results/trans/trans.nominal
 
 
 #2 Run a permutation pass
@@ -250,12 +250,8 @@ QTLtools trans \
 --bed genes.simulated.chr22.bed.gz \
 --threshold 1e-5 \
 --permute \
---out trans.permutation \
+--out /home/rstudio/Results/trans/trans.permutation \
 --seed 123 
-
-for v in *.txt.gz;do
-mv $v /hone/rstudio/Results/trans/$v;
-done
 
 ##################################################################################################################################### 
 #####################################################################################################################################
