@@ -172,10 +172,6 @@ QTLtools cis \
 #############################################
 #[cis] permutation
 
-cd /home/rstudio/Results
-mkdir cis_permutation
-cd /hone/rstudio/Bed-Seq
-
 # QTLtools cis \
 #  --vcf Genotypes.vcf.gz \
 #  --bed RPKM_all_sorted.bed.gz \
@@ -208,10 +204,6 @@ QTLtools cis \
 
 #############################################
 #[cis] permutation
-
-cd /hone/rstudio/Results
-mkdir trans
-cd /hone/rstudio/Bed-Seq
 
 
 #1 Run a nominal pass
