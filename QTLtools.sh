@@ -243,12 +243,13 @@ wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz
 wget http://jungle.unige.ch/QTLtools_examples/genotypes.chr22.vcf.gz.tbi
 
 
-QTLtools trans \ 
+QTLtools trans \
 --vcf genotypes.chr22.vcf.gz \
 --bed genes.simulated.chr22.bed.gz \
 --nominal \
 --threshold 1e-5 \
---out /hone/rstudio/Results/trans/trans.nominal 
+--out trans.nominal
+
 
 #2 Run a permutation pass
 
@@ -257,10 +258,14 @@ QTLtools trans \
 --bed genes.simulated.chr22.bed.gz \
 --threshold 1e-5 \
 --permute \
---out /hone/rstudio/Results/trans/trans.nominal \
+--out trans.permutation \
 --seed 123 
 
-#####################################################################################################################################
+for v in *.txt.gz;do
+mv $v /hone/rstudio/Results/trans/$v;
+done
+
+##################################################################################################################################### 
 #####################################################################################################################################
                                                         #################
 #####################################################################################################################################
