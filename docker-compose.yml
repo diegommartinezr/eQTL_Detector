@@ -13,7 +13,7 @@ services:
       - ./Results/quan:/home/rstudio/Results/quan:rw
       - ./Results/pca:/home/rstudio/Results/pca:rw
       - ./Results/cis_nominal:/home/rstudio/Results/cis_nominal:rw
-	  - ./Results/cis_permutation:/home/rstudio/Results/cis_permutation:rw
+      - ./Results/cis_permutation:/home/rstudio/Results/cis_permutation:rw
       - ./Results/trans:/home/rstudio/Results/trans:rw
     ports:
       - 8787:8787
