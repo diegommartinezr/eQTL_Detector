@@ -213,7 +213,7 @@ QTLtools cis \
 #--bed genes.simulated.chr22.bed.gz \
 #--nominal \
 #--threshold 1e-5 \
-#--out /hone/rstudio/Results/trans/trans.nominal 
+#--out /home/rstudio/Results/trans/trans.nominal 
 
 #2 Run a permutation pass
 
@@ -222,7 +222,7 @@ QTLtools cis \
 #--bed genes.simulated.chr22.bed.gz \
 #--threshold 1e-5 \
 #--permute \
-#-out /hone/rstudio/Results/trans/trans.nominal \
+#-out /home/rstudio/Results/trans/trans.nominal \
 #--seed 123 
 
 ### Usging dumy data
