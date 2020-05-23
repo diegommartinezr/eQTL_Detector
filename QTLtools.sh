@@ -253,6 +253,79 @@ QTLtools trans \
 --out /home/rstudio/Results/trans/trans.permutation \
 --seed 123 
 
+
+#####################################################################################################################################
+#####################################################################################################################################
+###############  fdensiy  ##################
+cd /home/rstudio/Bed-Seq
+
+#Rscript unFDR_cis.R /home/rstudio/Results/cis_permutation/permutation.txt 0.05 /home/rstudio/Results/fdensity/results.genes 
+#cat results.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fdensity/results.genes.significant.bed
+
+#QTLtools fdensity \
+#	--qtl /home/rstudio/Results/fdensity/results.genes.significant.bed \
+#	--bed TF.bed.gz \
+#	--out /home/rstudio/Results/fdensity/density.TF.around.QTL.txt
+
+#Using dummy Data
+cd /home/rstudio/Bed-Seq
+
+wget http://jungle.unige.ch/QTLtools_examples/results.genes.full.txt.gz
+wget http://jungle.unige.ch/QTLtools_examples/TFs.encode.bed.gz
+
+
+Rscript runFDR_cis.R results.genes.full.txt.gz 0.05 results.genes 
+cat results.genes.significant.txt | awk '{ print $9, $10-1, $11, $8, $1, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fdensity/results.genes.significant.bed 
+
+QTLtools fdensity \
+	--qtl /home/rstudio/Results/fdensity/results.genes.significant.bed \
+	--bed TFs.encode.bed.gz \
+	--out /home/rstudio/Results/fdensity/density.TF.around.QTL.txt 
+
+
+#####################################################################################################################################
+#####################################################################################################################################
+###############  fenrich  ##################
+
+#zcat /home/rstudio/Results/cis_permutation/permutation.txt | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fenrichresults.genes.quantified.bed 
+#QTLtools fenrich \
+#	--qtl /home/rstudio/Results/fdensity/results.genes.significant.bed \
+#	--tss /home/rstudio/Results/fenrichresults.genes.quantified.bed \
+#	--bed TF.bed.gz \
+#	--out /home/rstudio/Results/fenrich/enrichement.QTL.in.TF.txt 
+
+
+#Using dummy Data
+zcat results.genes.full.txt.gz | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fenrichresults.genes.quantified.bed 
+
+QTLtools fenrich \
+	--qtl /home/rstudio/Results/fdensity/results.genes.significant.bed \
+	--tss /home/rstudio/Results/fenrichresults.genes.quantified.bed \
+	--bed TF.bed.gz \
+	--out /home/rstudio/Results/fenrich/enrichement.QTL.in.TF.txt 
+
+
+
+#####################################################################################################################################
+#####################################################################################################################################
+###############  rtc  ##################
+
+cd /home/rstudio/Bed-Seq
+
+#Step1: Run the permutation pass
+#for j in $(seq 1 16); do
+#  echo "cis --vcf Genotypes.vcf.gz --bed RPKM_all_sorted.bed.gz --cov Cov.txt --permute 200 --chunk $j 16 --out /home/rstudio/Results/cis_permutation/$j\_16.txt";
+#done | xargs -P4 -n14 QTLtools
+
+
+#Using dummy Data
+
+#Step1: Run the permutation pass
+for j in $(seq 1 16); do
+  echo "cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 200 --chunk $j 16 --out /home/rstudio/Results/cis_permutation/permutations_$j\_16.txt";
+done | xargs -P4 -n14 QTLtools
+
+
 ##################################################################################################################################### 
 #####################################################################################################################################
                                                         #################
