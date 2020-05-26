@@ -46,13 +46,25 @@ for(d in colnames(Results_bamstat)){
           col = 116546555)
 }
 
-
 ```
 
 
 
+```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
 
-```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, paged.print=FALSE}
+par (las=2)
+barplt1 <- Results_bamstat[,1:3]
+barplt1 <- barplt1[order(barplt1$`Number of sequence reads`),]
+barplot(as.matrix(t(barplt1)), col =c(1,2,3),xaxt = "n",
+        sub = "Samples")
+legend("topleft",
+c("Number of sequence reads","Number of mapped reads", "Mapped reads annotated"),
+fill =c(3,2,1))
+
+```
+
+
+```{r echo=FALSE, fig.height=5, fig.width=14, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 
 home <- getwd()
@@ -78,22 +90,19 @@ colnames(Results_bamstat) <- c("Number of sequence reads",
                                "Number of covered annotations by at least one sequence")
 
 
-par(mfrow=c(1,3))
+par(mfrow=c(1,2))
 
 plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`,
      ylab = "Number of sequence reads" ,
      xlab = "Number of mapped reads" ,
      col ="red")
 
-plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`,
-     ylab = "Number of sequence reads" ,
-     xlab = "Number of mapped reads" ,
-     col ="red")
+plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads annotated`,
+     ylab = "Number of mapped reads" ,
+     xlab = "Mapped reads annotated" ,
+     col ="blue")
 
-plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`,
-     ylab = "Number of sequence reads" ,
-     xlab = "Number of mapped reads" ,
-     col ="red")
+
 
 ```
 
@@ -253,10 +262,6 @@ plot(cumm_comp, type = "o",
 
 
 
-
-
-
-
 ```
 
 
@@ -291,6 +296,8 @@ plot(PCA_geno$X2~PCA_geno$X1,
      main = "PCA on gene expression")
 abline(v=0,h=0, lty = 2, col = "blue")
 text(PCA_geno$X1,PCA_geno$X2, row.names(PCA_geno), cex=0.6, pos=4, col="red") 
+
+
 
 
 ############# Prop Var
@@ -330,9 +337,6 @@ plot(cumm_comp, type = "o",
      frame = F,
      col = "darkgreen",
      xlab = "Principal component")
-
-
-
 
 
 
