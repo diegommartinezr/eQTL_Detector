@@ -110,7 +110,7 @@ plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads ann
 ## Matching data.
 
 
-```{r mbv, echo=FALSE, fig.width=9, message=FALSE, warning=FALSE, paged.print=TRUE}
+```{r mbv, echo=FALSE, fig.height=20, fig.width=20, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(readr)
 library(tidyverse)
 library(gghighlight)
@@ -123,7 +123,7 @@ list_mbv <- list.files(path = Results_mbv)
 
 setwd(Results_mbv)
 
-par(mfrow=c(2,3))
+par(mfrow=c(6,4))
 
 for (d in list_mbv) {
   mbv  <- read_table2(d)
@@ -140,10 +140,11 @@ for (d in list_mbv) {
        ylab ="Concordance at hom" ,
        col ="blue",
        main=d,
-       cex.lab = 0.8,
-       cex.main = 0.7,
-       cex.axis = 0.7,
-       pch = "x")
+       cex.main = 1.2,
+       cex.axis = 1,
+       pch = "o",
+       ylim = c(0,1),
+       xlim = c(0,1))
 }
 
 
@@ -159,31 +160,11 @@ library(kableExtra)
 
 home <- getwd()
 
-Results_quan <- file.path(home,"Results/quan")
-
-list_quan <- list.files(path = Results_quan, pattern =".stats")
-
+Results_quan <- file.path(home,"Bed-Seq")
 
 setwd(Results_quan)
 
-list_quan <- lapply(list_quan, function(x){
-  read_delim(x, "\t", escape_double = FALSE, trim_ws = TRUE)
-  })
-
-Results_quan_data <- do.call("rbind", lapply(list_quan, as.data.frame))
-
-
-par(mfrow=c(3,3))
-
-
-vector_quan <- colnames(Results_quan_data)
-
-for(d in vector_quan[2:10]){
-  barplot(Results_quan_data[,d],
-          main = d,
-          col = "blue")
-}
-
+RPKM_all_bed <- read_table2("RPKM_all_sorted.bed.gz")
 
 
 ```
@@ -342,4 +323,145 @@ plot(cumm_comp, type = "o",
 
 
 ```
+
+## Cis Nominal
+
+```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+home <- getwd()
+Results_pca<- file.path(home,"Results/cis_nominal")
+
+cis_nominals <- read_table2("Results/cis_nominal/nominals.txt", 
+    col_names = FALSE)
+
+colnames_cis <- c("phenotype ID",
+                  "chromosome ID of the phenotype",
+                  "start position of the phenotype",
+                  "end position of the phenotype",
+                  "strand orientation of the phenotype",
+                  "total number of variants tested in cis",
+                  "distance between the phenotype and the tested variant",
+                  "ID of the tested variant",
+                  "chromosome ID of the variant",
+                  "start position of the variant",
+                  "end position of the variant",
+                  "nominal P-value",
+                  "regression slope",
+                  "flag equal to 1 is the variant is the top variant in cis")
+
+colnames(cis_nominals) <- colnames_cis
+
+
+subset_cis_nominal <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` == "1")
+
+
+par(mfrow = c(1,2))
+
+hist(cis_nominals$`nominal P-value`,
+     frame = F,
+     xlab = "nominal P-value",
+     sub = "",
+     main = "Density plot of the nomial P-value of al variants ")
+
+hist(subset_cis_nominal$`nominal P-value`,
+     frame = F,
+     xlab = "nominal P-value",
+     sub = "",
+     main = "Density plot of the nomial P-value of the top variants ")
+
+
+
+```
+
+
+## Cis Permutations Pass
+
+
+```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+home <- getwd()
+Results_pca<- file.path(home,"Results/cis_permutation")
+
+cis_permutation <- read_table2("Results/cis_permutation/permutation.txt", 
+    col_names = FALSE)
+
+
+colnames_cis_permutation <- c("phenotype ID",
+                              "chromosome ID of the phenotype",
+                              "start position of the phenotype",
+                              "end position of the phenotype",
+                              "strand orientation of the phenotype",
+                              "total number of variants tested in cis",
+                              "distance between the phenotype and the tested variant",
+                              "ID of the top variant",
+                              "chromosome ID of the top variant",
+                              "start position of the top variant",
+                              "end position of the top variant",
+                              "number of degrees of freedom used to compute the P-values",
+                              "Dummy",
+                              "first parameter value of the fitted beta distribution",
+                              "second parameter value of the fitted beta distribution",
+                              "P-value of association between the phenotype and the top variant in cis",
+                              "regression slope",
+                              "empirircal P-value",
+                              "beta distribution P-value")
+
+
+colnames(cis_permutation) <- colnames_cis_permutation
+
+
+par(mfrow = c(1,2))
+
+hist(cis_permutation$`empirircal P-value`,
+     frame = F,
+     xlab = "nominal P-value",
+     sub = "",
+     main = "Distribution of the empirical P-value",
+     col = "blue")
+
+hist(cis_permutation$`beta distribution P-value`,
+     frame = F,
+     xlab = "nominal P-value",
+     sub = "",
+     main = "Distribution of the beta distribution P-value",
+     col = "red")
+
+
+
+```
+
+
+
+
+
+```{r echo=FALSE, fig.height=6, fig.width=6, message=FALSE, warning=FALSE}
+
+plot(cis_permutation$`empirircal P-value`,
+     cis_permutation$`beta distribution P-value`,
+     xlab="Direct method", ylab="Beta approximation", main="")
+```
+
+
+## Trans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
