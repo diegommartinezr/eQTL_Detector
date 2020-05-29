@@ -296,11 +296,11 @@ QTLtools fdensity \
 
 
 #Using dummy Data
-zcat results.genes.full.txt.gz | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fenrichresults.genes.quantified.bed 
+zcat results.genes.full.txt.gz | awk '{ print $2, $3-1, $4, $1, $8, $5 }' | tr " " "\t" | sort -k1,1 -k2,2n > /home/rstudio/Results/fenrich/results.genes.quantified.bed 
 
 QTLtools fenrich \
 	--qtl /home/rstudio/Results/fdensity/results.genes.significant.bed \
-	--tss /home/rstudio/Results/fenrichresults.genes.quantified.bed \
+	--tss /home/rstudio/Results/fenrich/results.genes.quantified.bed \
 	--bed TF.bed.gz \
 	--out /home/rstudio/Results/fenrich/enrichement.QTL.in.TF.txt 
 
