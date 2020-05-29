@@ -527,7 +527,11 @@ hist(cis_permutation_FDR$`q-value`,
      main = "PDF of the beta-dist p-value with the FDR applied",
      col = "blue")
 
-knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),])
+knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]) %>%
+kable_styling(bootstrap_options = "striped", 
+              font_size = 7,
+              full_width = T,
+              fixed_thead = T)
 
 ```
 
