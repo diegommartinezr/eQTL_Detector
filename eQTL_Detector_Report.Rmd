@@ -320,8 +320,6 @@ plot(cumm_comp, type = "o",
      xlab = "Principal component")
 
 
-
-
 ```
 
 ## Cis Nominal
@@ -330,6 +328,7 @@ plot(cumm_comp, type = "o",
 
 library(knitr)
 library(readr)
+library(kableExtra)
 home <- getwd()
 Results_pca<- file.path(home,"Results/cis_nominal")
 
@@ -356,21 +355,35 @@ colnames(cis_nominals) <- colnames_cis
 
 subset_cis_nominal <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` == "1")
 
+par(mfrow = c(1,3))
 
-par(mfrow = c(1,2))
-
+o <- -log10(sort(cis_nominals$`nominal P-value`, decreasing = FALSE))
+e <- -log10(1:length(o)/length(o))
+plot(e, o, pch = 19, cex = 1,
+     xlab = expression(Expected~~-log[10](italic(p))),
+     ylab = expression(Observed~~-log[10](italic(p))),
+     xlim = c(0, max(e)), ylim = c(0,max(o)))
+lines(e, e, col = "red")
+  
 hist(cis_nominals$`nominal P-value`,
      frame = F,
      xlab = "nominal P-value",
      sub = "",
-     main = "Density plot of the nomial P-value of al variants ")
+     main = "Density plot of the nomial P-value of al variants ",
+     col = "blue")
 
 hist(subset_cis_nominal$`nominal P-value`,
      frame = F,
      xlab = "nominal P-value",
      sub = "",
-     main = "Density plot of the nomial P-value of the top variants ")
+     main = "Density plot of the nomial P-value of the top variants ",
+     col = "red")
 
+
+knitr::kable(subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1),
+             escape = FALSE,
+             format='html',
+             cex =0.6)
 
 
 ```
@@ -414,7 +427,17 @@ colnames_cis_permutation <- c("phenotype ID",
 colnames(cis_permutation) <- colnames_cis_permutation
 
 
-par(mfrow = c(1,2))
+par(mfrow = c(1,3))
+
+a <- as.matrix((cis_permutation[,19]))
+b <- as.matrix((cis_permutation[,18]))
+
+plot(a,b,
+     frame = F,
+     fill = T)
+abline(lm(a~b),
+       col ="red")
+
 
 hist(cis_permutation$`empirircal P-value`,
      frame = F,
@@ -446,19 +469,88 @@ plot(cis_permutation$`empirircal P-value`,
 ```
 
 
-## Trans
+## Trans nominal
 
 
+```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+home <- getwd()
+Results_trans<- file.path(home,"Results/trans")
 
 
+trans_nominal_best <- read_table2("Results/trans/trans.nominal.best.txt.gz",
+                                  col_names = F)
+colnames(trans_nominal_best) <- c("Phenotype ID",
+                                  "Dummy",
+                                  "Nominal P-value")
+
+trans_nominal_bins <- read_table2("Results/trans/trans.nominal.bins.txt.gz",
+                                  col_names = F)
+colnames(trans_nominal_bins) <- c("Index",
+                                  "Dummy1",
+                                  "Dummy2",
+                                  "Upper boundaries of the P-value bin",
+                                  "Lower boundaries of the P-value",
+                                  "Number of tests falling in this bin")
+
+trans_nominal_hits <- read_table2("Results/trans/trans.nominal.hits.txt.gz",
+                                  col_names = F)
+colnames(trans_nominal_hits) <- c(" Phenotype ID",
+                                  "Phenotype chrID",
+                                  "Phenotype start",
+                                  "Variant ID",
+                                  "Variant chrID",
+                                  "Variant position",
+                                  "Nominal P-value of association",
+                                  "Dummy",
+                                  "Regression slope")
 
 
+```
 
 
+## Trans permutation
 
 
+```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+home <- getwd()
+Results_trans<- file.path(home,"Results/trans")
 
 
+trans_permutation_best <- read_table2("Results/trans/trans.permutation.best.txt.gz",
+                                  col_names = F)
+colnames(trans_permutation_best) <- c("Phenotype ID",
+                                  "Dummy",
+                                  "Nominal P-value")
+
+trans_permutation_bins <- read_table2("Results/trans/trans.permutation.bins.txt.gz",
+                                  col_names = F)
+colnames(trans_permutation_bins) <- c("Index",
+                                  "Dummy1",
+                                  "Dummy2",
+                                  "Upper boundaries of the P-value bin",
+                                  "Lower boundaries of the P-value",
+                                  "Number of tests falling in this bin")
+
+trans_permutation_hits <- read_table2("Results/trans/trans.permutation.hits.txt.gz",
+                                  col_names = F)
+colnames(trans_permutation_hits) <- c(" Phenotype ID",
+                                  "Phenotype chrID",
+                                  "Phenotype start",
+                                  "Variant ID",
+                                  "Variant chrID",
+                                  "Variant position",
+                                  "Nominal P-value of association",
+                                  "Dummy",
+                                  "Regression slope")
+
+
+```
 
 
 
