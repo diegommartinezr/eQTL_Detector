@@ -13,7 +13,6 @@ output:
 
 
 ```{r QTLtools_bamstat, echo=FALSE, fig.height=8, fig.width=14, warning=FALSE}
-
 library(readr)
 library(kableExtra)
 
@@ -53,15 +52,6 @@ for(d in colnames(Results_bamstat)){
           col = 116546555)
 }
 
-
-allPackages <- installed.packages()[, 1]
-findBrokenPackages <- function(packages) {
-    for (p in packages) {
-        tryCatch(ncol(asNamespace(p)$.__NAMESPACE__.$S3methods),
-                 error = function(e) print(c(p, e)))
-    }
-}
-findBrokenPackages(allPackages)
 ```
 
 
@@ -485,8 +475,6 @@ hist(-log10(cis_permutation$`beta distribution P-value`),
      col = "red")
 
 
-
-
 library(qvalue)
 
 d<- read_table2("permutation.txt", 
@@ -501,7 +489,48 @@ hist(d$qval,
 write.table(d[which(d$qval <= 0.05), ], "results.genes.significant.txt", quote=FALSE, row.names=FALSE, col.names=FALSE)
 
 
+cis_permutation_FDR <- read.table("results.genes.significant.txt", quote="\"", comment.char="")
+
+
+colnames(cis_permutation_FDR) <- c("phenotype ID",
+                                   "chromosome ID of the phenotype",
+                                   "start position of the phenotype",
+                                   "end position of the phenotype",
+                                   "strand orientation of the phenotype",
+                                   "total number of variants tested in cis",
+                                   "distance between the phenotype and the tested variant",
+                                   "ID of the top variant",
+                                   "chromosome ID of the top variant",
+                                   "start position of the top variant",
+                                   "end position of the top variant",
+                                   "number of degrees of freedom used to compute the P-values",
+                                   "Dummy",
+                                   "first parameter value of the fitted beta distribution",
+                                   "second parameter value of the fitted beta distribution",
+                                   "P-value of association between the phenotype and the top variant in cis",
+                                   "regression slope",
+                                   "empirircal P-value",
+                                   "beta distribution P-value",
+                                   "q-value")
+
 ```
+
+```{r fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
+
+par(mfrow = c(1,2))
+
+plot(density(cis_permutation_FDR$`q-value`),
+  frame = F,
+  col = "blue",
+  main = "PDF of the beta-dist p-value with the FDR applied")
+hist(cis_permutation_FDR$`q-value`,
+     main = "PDF of the beta-dist p-value with the FDR applied",
+     col = "blue")
+
+knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),])
+
+```
+
 
 ## Trans nominal
 
@@ -545,6 +574,7 @@ colnames(trans_nominal_hits) <- c(" Phenotype ID",
 ## Trans permutation
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+
 library(knitr)
 library(readr)
 home <- getwd()
@@ -578,8 +608,4 @@ colnames(trans_permutation_hits) <- c(" Phenotype ID",
                                   "Dummy",
                                   "Regression slope")
 ```
-
-
-
-
 
