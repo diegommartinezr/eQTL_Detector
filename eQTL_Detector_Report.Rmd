@@ -118,6 +118,7 @@ plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads ann
 library(readr)
 library(tidyverse)
 library(gghighlight)
+library(readr)
 
 
 home <- getwd()
