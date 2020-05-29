@@ -1,16 +1,19 @@
 ---
 title: "eQTL_Detector Report"
-author: ""
+author: ''
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
     df_print: paged
+  word_document: default
   pdf_document: default
 ---
 
 ## QC on the sequence data
 
+
 ```{r QTLtools_bamstat, echo=FALSE, fig.height=8, fig.width=14, warning=FALSE}
+
 library(readr)
 library(kableExtra)
 
@@ -36,7 +39,11 @@ colnames(Results_bamstat) <- c("Number of sequence reads",
                                "Number of anotations",
                                "Number of covered annotations by at least one sequence")
 
-knitr::kable(Results_bamstat, caption = "QC summary for each red")
+knitr::kable(Results_bamstat, caption = "QC summary for each red") %>%
+kable_styling(bootstrap_options = "striped", 
+              font_size = 8,
+              full_width = T)
+
 par(mfrow=c(2,3),
     las = 2)
 
@@ -46,6 +53,15 @@ for(d in colnames(Results_bamstat)){
           col = 116546555)
 }
 
+
+allPackages <- installed.packages()[, 1]
+findBrokenPackages <- function(packages) {
+    for (p in packages) {
+        tryCatch(ncol(asNamespace(p)$.__NAMESPACE__.$S3methods),
+                 error = function(e) print(c(p, e)))
+    }
+}
+findBrokenPackages(allPackages)
 ```
 
 
@@ -102,15 +118,13 @@ plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads ann
      xlab = "Mapped reads annotated" ,
      col ="blue")
 
-
-
 ```
 
 
 ## Matching data.
 
 
-```{r mbv, echo=FALSE, fig.height=20, fig.width=20, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r mbv, echo=FALSE, fig.height=4, fig.width=20, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(readr)
 library(tidyverse)
 library(gghighlight)
@@ -123,7 +137,7 @@ list_mbv <- list.files(path = Results_mbv)
 
 setwd(Results_mbv)
 
-par(mfrow=c(6,4))
+par(mfrow=c(1,4))
 
 for (d in list_mbv) {
   mbv  <- read_table2(d)
@@ -150,10 +164,9 @@ for (d in list_mbv) {
 
 ```
 
-
 ## Quantification
 
-```{r quan, echo=FALSE, fig.height=12, fig.width=16, message=FALSE, warning=FALSE}
+```{r quan, echo=FALSE, fig.height=8, fig.width=16, message=FALSE, warning=FALSE}
 
 library(readr)
 library(kableExtra)
@@ -166,10 +179,20 @@ setwd(Results_quan)
 
 RPKM_all_bed <- read_table2("RPKM_all_sorted.bed.gz")
 
+length_samples <- length(RPKM_all_bed[1,])
+length_samples <- length_samples-7
+
+par(mfrow = c(2,1))
+
+boxplot(RPKM_all_bed[,7:length_samples],
+        xlab = "Samples",
+        main = "Boxplot of RPKM on non-standarized samples")
+
+boxplot(-log10(RPKM_all_bed[,7:length_samples]),
+        xlab = "Samples",
+        main = "Boxplot of - log_10 of  RPKM")
 
 ```
-
-
 
 ## PCA on Genotypes
 
@@ -245,8 +268,10 @@ plot(cumm_comp, type = "o",
 
 ```
 
-
 ## PCA on gene expression
+
+
+
 
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
@@ -365,41 +390,48 @@ plot(e, o, pch = 19, cex = 1,
      xlim = c(0, max(e)), ylim = c(0,max(o)))
 lines(e, e, col = "red")
   
-hist(cis_nominals$`nominal P-value`,
+hist(-log10(cis_nominals$`nominal P-value`),
      frame = F,
      xlab = "nominal P-value",
      sub = "",
-     main = "Density plot of the nomial P-value of al variants ",
-     col = "blue")
+     main = "Distribution of the nominal p-values",
+     col = "blue",
+     breaks = 50)
 
-hist(subset_cis_nominal$`nominal P-value`,
+hist(-log10(subset_cis_nominal$`nominal P-value`),
      frame = F,
      xlab = "nominal P-value",
      sub = "",
-     main = "Density plot of the nomial P-value of the top variants ",
-     col = "red")
+     main = "Distribution of the nominal p-values for the cis hits ",
+     col = "red",
+     breaks = 50)
 
 
-knitr::kable(subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1),
-             escape = FALSE,
-             format='html',
-             cex =0.6)
+subset_cis <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+
+knitr::kable(subset_cis[1:20,]) %>%
+kable_styling(bootstrap_options = "striped", 
+              font_size = 7,
+              full_width = T,
+              fixed_thead = T)
+
+
+
 
 
 ```
 
-
 ## Cis Permutations Pass
 
-
-```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
 
 library(knitr)
 library(readr)
 home <- getwd()
-Results_pca<- file.path(home,"Results/cis_permutation")
+Results_Cis_Permutations<- file.path(home,"Results/cis_permutation")
+setwd(Results_Cis_Permutations)
 
-cis_permutation <- read_table2("Results/cis_permutation/permutation.txt", 
+cis_permutation <- read_table2("permutation.txt", 
     col_names = FALSE)
 
 
@@ -426,8 +458,7 @@ colnames_cis_permutation <- c("phenotype ID",
 
 colnames(cis_permutation) <- colnames_cis_permutation
 
-
-par(mfrow = c(1,3))
+par(mfrow = c(1,4))
 
 a <- as.matrix((cis_permutation[,19]))
 b <- as.matrix((cis_permutation[,18]))
@@ -439,14 +470,14 @@ abline(lm(a~b),
        col ="red")
 
 
-hist(cis_permutation$`empirircal P-value`,
+hist(-log10(cis_permutation$`empirircal P-value`),
      frame = F,
      xlab = "nominal P-value",
      sub = "",
      main = "Distribution of the empirical P-value",
      col = "blue")
 
-hist(cis_permutation$`beta distribution P-value`,
+hist(-log10(cis_permutation$`beta distribution P-value`),
      frame = F,
      xlab = "nominal P-value",
      sub = "",
@@ -455,22 +486,24 @@ hist(cis_permutation$`beta distribution P-value`,
 
 
 
+
+library(qvalue)
+
+d<- read_table2("permutation.txt", 
+    col_names = FALSE)
+
+d=d[!is.na(d$X19),]
+
+d$qval=qvalue(d$X19)$qvalue
+hist(d$qval,
+     col = "green")
+
+write.table(d[which(d$qval <= 0.05), ], "results.genes.significant.txt", quote=FALSE, row.names=FALSE, col.names=FALSE)
+
+
 ```
-
-
-
-
-
-```{r echo=FALSE, fig.height=6, fig.width=6, message=FALSE, warning=FALSE}
-
-plot(cis_permutation$`empirircal P-value`,
-     cis_permutation$`beta distribution P-value`,
-     xlab="Direct method", ylab="Beta approximation", main="")
-```
-
 
 ## Trans nominal
-
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -507,15 +540,11 @@ colnames(trans_nominal_hits) <- c(" Phenotype ID",
                                   "Dummy",
                                   "Regression slope")
 
-
 ```
-
 
 ## Trans permutation
 
-
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
-
 library(knitr)
 library(readr)
 home <- getwd()
@@ -548,10 +577,7 @@ colnames(trans_permutation_hits) <- c(" Phenotype ID",
                                   "Nominal P-value of association",
                                   "Dummy",
                                   "Regression slope")
-
-
 ```
-
 
 
 
