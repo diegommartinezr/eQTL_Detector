@@ -3,10 +3,10 @@ title: "eQTL_Detector Report"
 author: ''
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
   word_document: default
-  pdf_document: default
 ---
 
 ## QC on the sequence data
@@ -412,6 +412,21 @@ kable_styling(bootstrap_options = "striped",
 
 ```
 
+### FDR Correction on nominal p-values
+
+
+```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
+
+library(qvalue)
+
+FDR_cis_nomial <- qvalue(cis_nominals$`nominal P-value`,pi0 = 1)
+
+plot(FDR_cis_nomial)
+
+```
+
+
+
 ## Cis Permutations Pass
 
 ```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
@@ -484,14 +499,9 @@ d<- read_table2("permutation.txt",
 d=d[!is.na(d$X19),]
 
 d$qval=qvalue(d$X19)$qvalue
-hist(d$qval,
-     col = "green")
+hist(d$qval, col = "green")
 
-write.table(d[which(d$qval <= 0.05), ], "results.genes.significant.txt", quote=FALSE, row.names=FALSE, col.names=FALSE)
-
-
-cis_permutation_FDR <- read.table("results.genes.significant.txt", quote="\"", comment.char="")
-
+cis_permutation_FDR <- d
 
 colnames(cis_permutation_FDR) <- c("phenotype ID",
                                    "chromosome ID of the phenotype",
@@ -516,7 +526,11 @@ colnames(cis_permutation_FDR) <- c("phenotype ID",
 
 ```
 
-```{r fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+library(kableExtra)
 
 par(mfrow = c(1,2))
 
@@ -525,8 +539,10 @@ plot(density(cis_permutation_FDR$`q-value`),
   col = "blue",
   main = "PDF of the beta-dist p-value with the FDR applied")
 hist(cis_permutation_FDR$`q-value`,
-     main = "PDF of the beta-dist p-value with the FDR applied",
+     main = "Histogram of the beta-dist p-value with the FDR applied",
      col = "blue")
+
+
 
 knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]) %>%
 kable_styling(bootstrap_options = "striped", 
@@ -539,10 +555,11 @@ kable_styling(bootstrap_options = "striped",
 
 ## Trans nominal
 
-```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
 
 library(knitr)
 library(readr)
+library(qvalue)
 home <- getwd()
 Results_trans<- file.path(home,"Results/trans")
 
@@ -574,9 +591,60 @@ colnames(trans_nominal_hits) <- c(" Phenotype ID",
                                   "Dummy",
                                   "Regression slope")
 
+
+
+par(mfrow=c(1,3))
+
+trans_nominals_FDR <- qvalue(trans_nominal_hits$`Nominal P-value of association`,pi0 = 1)
+
+
+hist(as.matrix(trans_nominal_best[,3]),
+     breaks = 50,
+     col = "blue",
+     main = "Distributions of the nominal P-values on top hits per phenotype",
+     xlab = "Nominal P-value")
+
+plot(trans_nominal_bins$`Number of tests falling in this bin`~ trans_nominal_bins$Index,
+     frame = F,
+     col = "red",
+     xlab = "Bin index",
+     ylab = "Number of tests falling in this bin",
+     cex = 3,
+     pch = ".")
+
+hist(as.matrix(trans_nominal_hits[,7]),
+     breaks = 30,
+     col = "green",
+     main = "Distributions of the nominal P-values on hits with a P-value above the specified --threshold (=1e-5)",
+     xlab = "Nominal P-value")
+
+
 ```
 
-## Trans permutation
+
+```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+par(mfrow=c(2,4))
+
+plot(trans_nominals_FDR,
+     col ="blue")
+
+```
+
+
+```{r echo=FALSE}
+
+knitr::kable(trans_nominal_hits)%>%
+kable_styling(bootstrap_options = "striped", 
+              font_size = 7,
+              full_width = T,
+              fixed_thead = T)
+
+```
+
+
+## Trans permutatios pass
+
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -612,5 +680,8 @@ colnames(trans_permutation_hits) <- c(" Phenotype ID",
                                   "Nominal P-value of association",
                                   "Dummy",
                                   "Regression slope")
+
+
+a <- -log10()
 ```
 
