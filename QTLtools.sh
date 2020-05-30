@@ -325,7 +325,23 @@ for j in $(seq 1 16); do
   echo "cis --vcf genotypes.chr22.vcf.gz --bed genes.50percent.chr22.bed.gz --cov genes.covariates.pc50.txt.gz --permute 200 --chunk $j 16 --out /home/rstudio/Results/cis_permutation/permutations_$j\_16.txt";
 done | xargs -P4 -n14 QTLtools
 
+cat /home/rstudio/Results/cis_permutation/permutations_*.txt | gzip -c > permutations_all.txt.gz
+Rscript runFDR_cis.R permutations_all.txt.gz 0.05 permutations_all 
 
+#Getting dummy data required for rtc analysis
+
+wget http://jungle.unige.ch/QTLtools_examples/hotspots_b37_hg19.bed
+wget http://jungle.unige.ch/QTLtools_examples/GWAS.b37.txt
+
+QTLtools rtc \
+	--vcf genotypes.chr22.vcf.gz \
+	--bed genes.50percent.chr22.bed.gz \
+	--cov genes.covariates.pc50.txt.gz \
+	--hotspot hotspots_b37_hg19.bed \
+	--gwas-cis GWAS.b37.txt permutations_all.significant.txt \
+	--normal \
+	--out /home/rstudio/Results/rtc/rtc_results.txt
+	
 ##################################################################################################################################### 
 #####################################################################################################################################
                                                         #################
@@ -338,4 +354,3 @@ cd /home/rstudio
 
 R -e "rmarkdown::render('eQTL_Detector_Report.Rmd',output_file='Report.html')"
 mv Report.html /home/rstudio/Results/Report.html
-
