@@ -70,7 +70,7 @@ fill =c(3,2,1))
 ```
 
 
-```{r echo=FALSE, fig.height=5, fig.width=14, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE, fig.height=4.5, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 
 home <- getwd()
@@ -102,12 +102,17 @@ plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mappe
      ylab = "Number of sequence reads" ,
      xlab = "Number of mapped reads" ,
      col ="red")
+abline(lm(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`),
+        col = "blue",
+        lty = 2)
 
 plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads annotated`,
      ylab = "Number of mapped reads" ,
      xlab = "Mapped reads annotated" ,
      col ="blue")
-
+abline(lm(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads annotated`),
+        col = "red",
+        lty = 2)
 ```
 
 
@@ -262,9 +267,6 @@ plot(cumm_comp, type = "o",
 ## PCA on gene expression
 
 
-
-
-
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
 
 library(knitr)
@@ -358,7 +360,7 @@ colnames_cis <- c("phenotype ID",
                   "strand orientation of the phenotype",
                   "total number of variants tested in cis",
                   "distance between the phenotype and the tested variant",
-                  "ID of the tested variant",
+                  "ID",
                   "chromosome ID of the variant",
                   "start position of the variant",
                   "end position of the variant",
@@ -383,7 +385,7 @@ lines(e, e, col = "red")
   
 hist(-log10(cis_nominals$`nominal P-value`),
      frame = F,
-     xlab = "nominal P-value",
+     xlab = "-log10 nominal P-value",
      sub = "",
      main = "Distribution of the nominal p-values",
      col = "blue",
@@ -391,7 +393,7 @@ hist(-log10(cis_nominals$`nominal P-value`),
 
 hist(-log10(subset_cis_nominal$`nominal P-value`),
      frame = F,
-     xlab = "nominal P-value",
+     xlab = "-log10 nominal P-value",
      sub = "",
      main = "Distribution of the nominal p-values for the cis hits ",
      col = "red",
@@ -405,6 +407,7 @@ kable_styling(bootstrap_options = "striped",
               font_size = 7,
               full_width = T,
               fixed_thead = T)
+
 
 
 
@@ -426,8 +429,117 @@ plot(FDR_cis_nomial)
 ```
 
 
+```{bash}
+mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
+mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
+```
+
+
+
+```{r echo=FALSE, fig.height=6, fig.width=18, message=FALSE, warning=FALSE}
+
+
+library(vcfR)
+library(knitr)
+library(readr)
+
+cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:10,]
+
+vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10_vector,]
+
+rownames(RPKM_all_bed) <- RPKM_all_bed$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+rownames(merge1) <- merge1$`phenotype ID`
+merge1 <- merge1[,-(1:3)]
+
+par(mfrow = c (2,5))
+
+for (a in RPKM_top10_cis_nomial$gene) {
+  Expression_value <- RPKM_top10_cis_nomial[a,]
+  Expression_value <- t(as.matrix(Expression_value[,-(1:6)]))
+  Genotype <- as.matrix(t(merge1[a,]))
+  boxplot(Expression_value[1:39]~Genotype[1:39],
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values")
+  stripchart(Expression_value[1:39]~Genotype[1:39], vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+
+```
+
+
+### Cis with Dummy Data
+
+
+```{bash}
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+```
+
+```{r}
+library(readr)
+RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
+
+```
+
+
+```{r echo=FALSE, fig.height=6, fig.width=18, message=FALSE, warning=FALSE}
+
+library(vcfR)
+library(knitr)
+library(readr)
+
+cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:10,]
+
+vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10_vector,]
+
+##We import the RPKM_d
+
+rownames(RPKM_all_bed_d) <- RPKM_all_bed_d$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed_d[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+rownames(merge1) <- merge1$`phenotype ID`
+merge1 <- merge1[,-(1:3)]
+
+par(mfrow = c (2,5))
+
+for (a in RPKM_top10_cis_nomial$gene) {
+  Expression_value <- RPKM_top10_cis_nomial[a,]
+  Expression_value <- t(as.matrix(Expression_value[,-(1:6)]))
+  Genotype <- as.matrix(t(merge1[a,]))
+  boxplot(Expression_value[1:39]~Genotype[1:39],
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values",
+          col = 0)
+  stripchart(Expression_value~Genotype, vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+
+
+```
 
 ## Cis Permutations Pass
+
 
 ```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -525,6 +637,7 @@ colnames(cis_permutation_FDR) <- c("phenotype ID",
                                    "q-value")
 
 ```
+
 
 ```{r echo=FALSE, fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
 
