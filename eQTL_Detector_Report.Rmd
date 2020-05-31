@@ -450,7 +450,7 @@ cis_nominal_top10 <- cis_nominal_top10[1:10,]
 vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
-vcf_top10_cis_nomial <- vcf[cis_nominal_top10_vector,]
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
 
 rownames(RPKM_all_bed) <- RPKM_all_bed$gene
 RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
@@ -481,7 +481,6 @@ for (a in RPKM_top10_cis_nomial$gene) {
 
 ### Cis with Dummy Data
 
-
 ```{bash}
 wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 ```
@@ -493,7 +492,9 @@ RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
 ```
 
 
-```{r echo=FALSE, fig.height=6, fig.width=18, message=FALSE, warning=FALSE}
+
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -501,12 +502,138 @@ library(readr)
 
 cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
 cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
-cis_nominal_top10 <- cis_nominal_top10[1:10,]
+cis_nominal_top10 <- cis_nominal_top10[1:20,]
 
 vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
-vcf_top10_cis_nomial <- vcf[cis_nominal_top10_vector,]
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
+vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
+##We import the RPKM_d
+
+rownames(RPKM_all_bed_d) <- RPKM_all_bed_d$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed_d[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+
+merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
+                 by.x = "phenotype ID" , 
+                 by.y ='gene',
+                 all.y = F))
+merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
+rownames(merge2) <- merge2_Genes_SNPs
+merge2 <- merge2[,-(1:3)]
+
+
+par(mfrow=c(1,4))
+
+for (a in merge2_Genes_SNPs) {
+  sample_number <- (ncol(RPKM_all_bed_d)-6)
+  box1 <- t(merge2[a,])
+  Genotype <- box1[c(1:sample_number),]
+  Genotype <- as.data.frame(Genotype)
+  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  l1 <- length(box1)
+  l2 <- (l1- sample_number)+1
+  Expression_value <- box1[l2:l1,]
+  
+
+  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values",
+          col = 0)
+  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+
+```
+
+### Boxplot of the expression with the FDR correction
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+
+library(vcfR)
+library(knitr)
+library(readr)
+
+cis_nominals$`nominal P-value` <-  FDR_cis_nomial[["qvalues"]]
+cis_nominal_top10 <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+
+cis_nominal_top10 <- cis_nominal_top10[order(cis_nominal_top10$`nominal P-value`),] 
+
+cis_nominal_top10 <- cis_nominal_top10[1:10,]
+
+vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
+
+rownames(RPKM_all_bed) <- RPKM_all_bed$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+
+merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
+                 by.x = "phenotype ID" , 
+                 by.y ='gene',
+                 all.y = F))
+merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
+rownames(merge2) <- merge2_Genes_SNPs
+merge2 <- merge2[,-(1:3)]
+
+
+par(mfrow=c(1,4))
+
+for (a in merge2_Genes_SNPs) {
+  sample_number <- (ncol(RPKM_all_bed)-6)
+  box1 <- t(merge2[a,])
+  Genotype <- box1[c(1:sample_number),]
+  Genotype <- as.data.frame(Genotype)
+  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  l1 <- length(box1)
+  l2 <- (l1- sample_number)+1
+  Expression_value <- box1[l2:l1,]
+  
+
+  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values",
+          col = 0)
+  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+
+```
+
+#### Dummy Data
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+
+library(vcfR)
+library(knitr)
+library(readr)
+
+cis_nominals$`nominal P-value` <-  FDR_cis_nomial[["qvalues"]]
+
+cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:20,]
+
+vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
+
+vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
+
 
 ##We import the RPKM_d
 
@@ -516,30 +643,42 @@ rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene
 
 merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
 merge1 <- merge1[,-(3:21)]
-rownames(merge1) <- merge1$`phenotype ID`
-merge1 <- merge1[,-(1:3)]
 
-par(mfrow = c (2,5))
+merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
+                 by.x = "phenotype ID" , 
+                 by.y ='gene',
+                 all.y = F))
+merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
+rownames(merge2) <- merge2_Genes_SNPs
+merge2 <- merge2[,-(1:3)]
 
-for (a in RPKM_top10_cis_nomial$gene) {
-  Expression_value <- RPKM_top10_cis_nomial[a,]
-  Expression_value <- t(as.matrix(Expression_value[,-(1:6)]))
-  Genotype <- as.matrix(t(merge1[a,]))
-  boxplot(Expression_value[1:39]~Genotype[1:39],
+
+par(mfrow=c(1,4))
+
+for (a in merge2_Genes_SNPs) {
+  sample_number <- (ncol(RPKM_all_bed_d)-6)
+  box1 <- t(merge2[a,])
+  Genotype <- box1[c(1:sample_number),]
+  Genotype <- as.data.frame(Genotype)
+  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  l1 <- length(box1)
+  l2 <- (l1- sample_number)+1
+  Expression_value <- box1[l2:l1,]
+  
+
+  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
           main = a,
           xlab = "Genotype",
           ylab = "Expression Values",
           col = 0)
-  stripchart(Expression_value~Genotype, vertical = TRUE, 
+  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
     method = "jitter", add = TRUE, pch = 20, col = 'blue')
 }
-
 
 
 ```
 
 ## Cis Permutations Pass
-
 
 ```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -583,7 +722,9 @@ b <- as.matrix((cis_permutation[,18]))
 
 plot(a,b,
      frame = F,
-     fill = T)
+     fill = T,
+     xlab = "Direct method",
+     ylab = "Beta approximation")
 abline(lm(a~b),
        col ="red")
 
