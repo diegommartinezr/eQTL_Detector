@@ -3,17 +3,12 @@ title: "eQTL_Detector Report"
 author: ''
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  html_document:
-    pandoc_args: [
-      "+RTS", "-K64m",
-      "-RTS"
-    ]
+  pdf_document: default
 ---
 
-## QC on the sequence data
+#### QC on the sequence data
 
-
-```{r QTLtools_bamstat, echo=FALSE, fig.height=4, fig.width=18, warning=FALSE}
+```{r QTLtools_bamstat, echo=FALSE, fig.height=4, fig.width=18, warning=FALSE, fig.cap= "Quality check on sequence data"}
 library(readr)
 library(kableExtra)
 
@@ -39,7 +34,7 @@ colnames(Results_bamstat) <- c("Number of sequence reads",
                                "Number of anotations",
                                "Number of covered annotations by at least one sequence")
 
-knitr::kable(Results_bamstat, caption = "QC summary for each red") %>%
+knitr::kable(Results_bamstat, caption = "QC summary for all  red") %>%
 kable_styling(bootstrap_options = "striped", 
               font_size = 8,
               full_width = T)
@@ -55,9 +50,7 @@ for(d in colnames(Results_bamstat)){
 
 ```
 
-
-
-```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, fig.cap= " Quality contro of the sequence data, for each sample (on the x-axis) we have the number of samples (green), the trads passing the QC (read) and the exonics reads (black)"}
 
 par (las=2)
 barplt1 <- Results_bamstat[,1:3]
@@ -71,8 +64,7 @@ fill =c(3,2,1))
 ```
 
 
-```{r echo=FALSE, fig.height=4.5, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE}
-
+```{r echo=FALSE, fig.height=4, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap= "Assessment of the sequence data in termns of; reads that passed the filter mapping quality (left),mapped reads falling on the annotation specified on the .bed file (center) and annotations covered by at least one sequence on the total number of annotation of the .bed file (rigth)"}
 
 home <- getwd()
 Results_bamstat <- file.path(home,"Results/bamstat")
@@ -97,12 +89,13 @@ colnames(Results_bamstat) <- c("Number of sequence reads",
                                "Number of covered annotations by at least one sequence")
 
 
-par(mfrow=c(1,2))
+par(mfrow=c(1,3))
 
 plot(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`,
      ylab = "Number of sequence reads" ,
      xlab = "Number of mapped reads" ,
-     col ="red")
+     col ="red",
+     pch = 16)
 abline(lm(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of mapped reads`),
         col = "blue",
         lty = 2)
@@ -110,17 +103,30 @@ abline(lm(Results_bamstat$`Number of sequence reads`~Results_bamstat$`Number of 
 plot(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads annotated`,
      ylab = "Number of mapped reads" ,
      xlab = "Mapped reads annotated" ,
-     col ="blue")
+     col ="blue",
+     pch = 16)
 abline(lm(Results_bamstat$`Number of mapped reads`~ Results_bamstat$`Mapped reads annotated`),
         col = "red",
         lty = 2)
+
+plot(Results_bamstat$`Number of anotations`~ Results_bamstat$`Number of covered annotations by at least one sequence`,
+     ylab = "number of annotations covered by at least one sequencing read" ,
+     xlab = "total number of annotations" ,
+     col ="darkgreen",
+     pch = 16)
+abline(lm(Results_bamstat$`Number of anotations`~ Results_bamstat$`Number of covered annotations by at least one sequence`),
+        col = "darkgreen",
+        lty = 2)
+
 ```
 
+\pagebreak
 
-## Matching data.
+#### Matching data.
 
+This step is to make sure the good matching between the sequence (phenotype) and the genotyping data.
 
-```{r mbv, echo=FALSE, fig.height=4, fig.width=20, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r mbv, echo=FALSE, fig.height=4, fig.width=20, message=FALSE, warning=FALSE, paged.print=FALSE, fig.cap= "For all possible combinatios by sample(sequence/genotype), for each sample the scatter plot is showing the match of hets and homo calls"}
 library(readr)
 library(tidyverse)
 library(gghighlight)
@@ -147,8 +153,8 @@ for (d in list_mbv) {
   colnames(ggdata) <- c("Concordance at het","Concordance at hom")
   #Get the ggplot 
   plot(ggdata$`Concordance at hom`,ggdata$`Concordance at het`,
-       xlab ="Concordance at het" ,
-       ylab ="Concordance at hom" ,
+       xlab ="Concordance at hom" ,
+       ylab ="Concordance at het" ,
        col ="blue",
        main=d,
        cex.main = 1.2,
@@ -161,9 +167,11 @@ for (d in list_mbv) {
 
 ```
 
-## Quantification
+\pagebreak
 
-```{r quan, echo=FALSE, fig.height=8, fig.width=16, message=FALSE, warning=FALSE}
+#### Quantification
+
+```{r quan, echo=FALSE, fig.height=8, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Boxplot of the experesion in terms of RPKM for all regios, linear (top) log_10 (down)"}
 
 library(readr)
 library(kableExtra)
@@ -191,9 +199,12 @@ boxplot(-log10(RPKM_all_bed[,7:length_samples]),
 
 ```
 
-## PCA on Genotypes
 
-```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
+\pagebreak
+
+#### PCA on Genotypes
+
+```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Biplot using the PC1 and PC2 for the Genotypes (left), scree plot of all components (midle) and cumulative prediction by using different components "}
 
 library(knitr)
 library(readr)
@@ -265,10 +276,10 @@ plot(cumm_comp, type = "o",
 
 ```
 
-## PCA on gene expression
+#### PCA on gene expression
 
 
-```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Biplot using the PC1 and PC2 for the gene expression (left), scree plot of all components (midle) and cumulative prediction by using different components"}
 
 library(knitr)
 library(readr)
@@ -341,7 +352,7 @@ plot(cumm_comp, type = "o",
 
 ```
 
-## Cis Nominal
+\pagebreak
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -374,6 +385,62 @@ colnames(cis_nominals) <- colnames_cis
 
 subset_cis_nominal <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` == "1")
 
+
+
+subset_cis <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+
+knitr::kable(subset_cis[1:30,], col.names = c(1:14),
+             caption = "List of to 30 cis eQTL mapped using nominal pass, the columns are,
+    1. The phenotype ID,
+    2. The chromosome ID of the phenotype,
+    3. The start position of the phenotype,
+    4. The end position of the phenotype,
+    5. The strand orientation of the phenotype,
+    6. The total number of variants tested in cis,
+    7. The distance between the phenotype and the tested variant (accounting for strand orientation),
+    8. The ID of the tested variant,
+    9. The chromosome ID of the variant,
+    10. The start position of the variant,
+    11. The end position of the variant,
+    12. The nominal P-value of association between the variant and the phenotype,
+    13. The corresponding regression slope,
+    14. A binary flag equal to 1 is the variant is the top variant in cis,
+") %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down") %>% kableExtra::landscape()
+
+##FDR Correction
+
+library(qvalue)
+
+FDR_cis_nomial <- qvalue(cis_nominals$`nominal P-value`,pi0 = 1)
+
+cis_nominals_FDR <- cis_nominals
+cis_nominals_FDR$`nominal P-value` <- FDR_cis_nomial[["qvalues"]]
+cis_nominals_FDR <- cis_nominals_FDR[order(cis_nominals_FDR$`nominal P-value`),]
+
+```
+#### Cis Nominal
+##### FDR Correction on nominal p-values
+
+```{r echo=FALSE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
+
+plot(FDR_cis_nomial,
+     cex.axis = 0.8,
+     cex.lab =0.8)
+
+```
+
+```{bash eval=FALSE, include=FALSE}
+#mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
+#mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
+```
+
+
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 par(mfrow = c(1,3))
 
 o <- -log10(sort(cis_nominals$`nominal P-value`, decreasing = FALSE))
@@ -401,36 +468,65 @@ hist(-log10(subset_cis_nominal$`nominal P-value`),
      breaks = 50)
 
 
-subset_cis <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
+par(mfrow = c(1,3))
 
-knitr::kable(subset_cis[1:20,]) %>%
-kable_styling(bootstrap_options = "striped", 
-              font_size = 7,
-              full_width = T,
-              fixed_thead = T)
+hist(cis_nominals$`distance between the phenotype and the tested variant`,
+     breaks = 30,
+     xlab = "Distance from the tested variant",
+     col = "223263")
 
+plot(cis_nominals$`regression slope`,cis_nominals$`nominal P-value`,
+     pch = 16,
+     cex = 0.8,
+     xlab = "regression slope",
+     ylab ="nominal P-value")
+abline(v = 0, lty =2, col = "red")
+abline(v = 0.0001, lty =2, col = "red")
 
-```
-
-### FDR Correction on nominal p-values
-
-```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
-
-library(qvalue)
-
-FDR_cis_nomial <- qvalue(cis_nominals$`nominal P-value`,pi0 = 1)
-
-plot(FDR_cis_nomial)
-
-```
-
-```{bash}
-mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
-mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
+hist(cis_nominals_FDR$`nominal P-value`, 
+     xlab = "q-values",
+     main = "",
+     breaks = 30)
 ```
 
 
-```{r echo=FALSE, fig.height=6, fig.width=18, message=FALSE, warning=FALSE}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+
+knitr::kable(cis_nominals_FDR[1:30,], col.names = c(1:14),
+             caption = "List of to 30 cis eQTLs mapped using nominal pass and the FDR, the columns are,
+    1. The phenotype ID,
+    2. The chromosome ID of the phenotype,
+    3. The start position of the phenotype,
+    4. The end position of the phenotype,
+    5. The strand orientation of the phenotype,
+    6. The total number of variants tested in cis,
+    7. The distance between the phenotype and the tested variant (accounting for strand orientation),
+    8. The ID of the tested variant,
+    9. The chromosome ID of the variant,
+    10. The start position of the variant,
+    11. The end position of the variant,
+    12. q-value,
+    13. The corresponding regression slope,
+    14. A binary flag equal to 1 is the variant is the top variant in cis,") %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down") %>% kableExtra::landscape()
+
+```
+
+
+##### Expression level forsignificant variants
+
+At this point in the analysis we will use two different sets to plot the effect on genotype on the gene expression, one with a subset on the chromosome 22 of 40 Geuvadis samples, to test how the pipeline is moving from the different steps, and the dummy data provided by QTLtools developers.
+
+
+
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
 
 library(vcfR)
@@ -455,7 +551,7 @@ merge1 <- merge1[,-(3:21)]
 rownames(merge1) <- merge1$`phenotype ID`
 merge1 <- merge1[,-(1:3)]
 
-par(mfrow = c (2,5))
+par(mfrow = c (1,4))
 
 for (a in RPKM_top10_cis_nomial$gene) {
   Expression_value <- RPKM_top10_cis_nomial[a,]
@@ -472,13 +568,16 @@ for (a in RPKM_top10_cis_nomial$gene) {
 
 ```
 
+
+
+
 ### Cis with Dummy Data
 
-```{bash}
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+```{bash echo=FALSE}
+#wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)
 RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
 
@@ -787,13 +886,16 @@ hist(cis_permutation_FDR$`q-value`,
      main = "Histogram of the beta-dist p-value with the FDR applied",
      col = "blue")
 
+rr <- cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]
 
+rr <- rr[,-(12:15)] 
+rr <- rr[,-(2)] 
+knitr::kable(rr[1:20,]) %>% 
+  kable_styling(font_size = 6,
+                full_width = T,
+                fixed_thead = F,
+                latex_options = "scale_down") %>% kableExtra::landscape()
 
-knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]) %>%
-kable_styling(bootstrap_options = "striped", 
-              font_size = 7,
-              full_width = T,
-              fixed_thead = T)
 
 ```
 
