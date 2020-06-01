@@ -1426,7 +1426,7 @@ knitr::kable(D,             col.names = c(1:8),
   kable_styling(font_size = 6,
                 full_width = F,
                 fixed_thead = T,
-                latex_options = "scale_down") %>% kableExtra::landscape()
+                latex_options = "scale_down")
 fisher.test(matrix(c(D$X1, D$X2, round(D$X3), D$X2), ncol=2))
 
 ```
