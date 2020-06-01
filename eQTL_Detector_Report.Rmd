@@ -477,23 +477,21 @@ hist(cis_nominals$`distance between the phenotype and the tested variant`,
 
 plot(cis_nominals$`regression slope`,cis_nominals$`nominal P-value`,
      pch = 16,
-     cex = 0.8,
+     cex = 0.5,
      xlab = "regression slope",
      ylab ="nominal P-value")
 abline(v = 0, lty =2, col = "red")
-abline(v = 0.0001, lty =2, col = "red")
 
 hist(cis_nominals_FDR$`nominal P-value`, 
      xlab = "q-values",
      main = "",
-     breaks = 30)
+     breaks = 30,
+     col = 222)
+
 ```
 
 
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-
 
 knitr::kable(cis_nominals_FDR[1:30,], col.names = c(1:14),
              caption = "List of to 30 cis eQTLs mapped using nominal pass and the FDR, the columns are,
@@ -523,86 +521,29 @@ knitr::kable(cis_nominals_FDR[1:30,], col.names = c(1:14),
 
 At this point in the analysis we will use two different sets to plot the effect on genotype on the gene expression, one with a subset on the chromosome 22 of 40 Geuvadis samples, to test how the pipeline is moving from the different steps, and the dummy data provided by QTLtools developers.
 
-
-
+###### Boxplot cis nominal non-FDR
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
-
 
 library(vcfR)
 library(knitr)
 library(readr)
 
+
 cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
-cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
-cis_nominal_top10 <- cis_nominal_top10[1:10,]
+cis_nominal_top10 <- cis_nominal_top[order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
 vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
-vcf<- data.frame(cbind(vcf@fix,vcf@gt))
-rownames(vcf) <- vcf$ID
-vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
-
-rownames(RPKM_all_bed) <- RPKM_all_bed$gene
-RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
-rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
-
-merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
-merge1 <- merge1[,-(3:21)]
-rownames(merge1) <- merge1$`phenotype ID`
-merge1 <- merge1[,-(1:3)]
-
-par(mfrow = c (1,4))
-
-for (a in RPKM_top10_cis_nomial$gene) {
-  Expression_value <- RPKM_top10_cis_nomial[a,]
-  Expression_value <- t(as.matrix(Expression_value[,-(1:6)]))
-  Genotype <- as.matrix(t(merge1[a,]))
-  boxplot(Expression_value[1:39]~Genotype[1:39],
-          main = a,
-          xlab = "Genotype",
-          ylab = "Expression Values")
-  stripchart(Expression_value[1:39]~Genotype[1:39], vertical = TRUE, 
-    method = "jitter", add = TRUE, pch = 20, col = 'blue')
-}
-
-
-```
-
-
-
-
-### Cis with Dummy Data
-
-```{bash echo=FALSE}
-#wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(readr)
-RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
-
-```
-
-
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
-
-library(vcfR)
-library(knitr)
-library(readr)
-
-cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
-cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
-cis_nominal_top10 <- cis_nominal_top10[1:20,]
-
-vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
 vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
 ##We import the RPKM_d
 
-rownames(RPKM_all_bed_d) <- RPKM_all_bed_d$gene
-RPKM_top10_cis_nomial <- RPKM_all_bed_d[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_all_bed) <- RPKM_all_bed$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
+
 rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
 
 merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
@@ -612,71 +553,10 @@ merge2 <- (merge(merge1, RPKM_top10_cis_nomial,
                  by.x = "phenotype ID" , 
                  by.y ='gene',
                  all.y = F))
+
 merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
 rownames(merge2) <- merge2_Genes_SNPs
 merge2 <- merge2[,-(1:3)]
-
-
-par(mfrow=c(1,4))
-
-for (a in merge2_Genes_SNPs) {
-  sample_number <- (ncol(RPKM_all_bed_d)-6)
-  box1 <- t(merge2[a,])
-  Genotype <- box1[c(1:sample_number),]
-  Genotype <- as.data.frame(Genotype)
-  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
-  l1 <- length(box1)
-  l2 <- (l1- sample_number)+1
-  Expression_value <- box1[l2:l1,]
-  
-
-  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
-          main = a,
-          xlab = "Genotype",
-          ylab = "Expression Values",
-          col = 0)
-  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
-    method = "jitter", add = TRUE, pch = 20, col = 'blue')
-}
-
-
-```
-
-### Boxplot of the expression with the FDR correction
-
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
-
-library(vcfR)
-library(knitr)
-library(readr)
-
-cis_nominals$`nominal P-value` <-  FDR_cis_nomial[["qvalues"]]
-cis_nominal_top10 <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
-
-cis_nominal_top10 <- cis_nominal_top10[order(cis_nominal_top10$`nominal P-value`),] 
-
-cis_nominal_top10 <- cis_nominal_top10[1:10,]
-
-vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
-vcf<- data.frame(cbind(vcf@fix,vcf@gt))
-rownames(vcf) <- vcf$ID
-vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
-
-rownames(RPKM_all_bed) <- RPKM_all_bed$gene
-RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
-rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene
-
-merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
-merge1 <- merge1[,-(3:21)]
-
-merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
-                 by.x = "phenotype ID" , 
-                 by.y ='gene',
-                 all.y = F))
-merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
-rownames(merge2) <- merge2_Genes_SNPs
-merge2 <- merge2[,-(1:3)]
-
 
 par(mfrow=c(1,4))
 
@@ -703,7 +583,9 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-#### Dummy Data
+\pagebreak
+
+###### Boxplot cis nominal FDR
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -711,20 +593,86 @@ library(vcfR)
 library(knitr)
 library(readr)
 
-cis_nominals$`nominal P-value` <-  FDR_cis_nomial[["qvalues"]]
+cis_nominal_top <- subset(cis_nominals_FDR, cis_nominals_FDR$`flag equal to 1 is the variant is the top variant in cis` ==1)
+cis_nominal_top10 <- cis_nominal_top[order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:16,]
+
+vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
+vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
+##We import the RPKM_d
+
+rownames(RPKM_all_bed) <- RPKM_all_bed$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed[cis_nominal_top10$`phenotype ID`,]
+
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+
+merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
+                 by.x = "phenotype ID" , 
+                 by.y ='gene',
+                 all.y = F))
+
+merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
+rownames(merge2) <- merge2_Genes_SNPs
+merge2 <- merge2[,-(1:3)]
+
+par(mfrow=c(1,4))
+
+for (a in merge2_Genes_SNPs) {
+  sample_number <- (ncol(RPKM_all_bed)-6)
+  box1 <- t(merge2[a,])
+  Genotype <- box1[c(1:sample_number),]
+  Genotype <- as.data.frame(Genotype)
+  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  l1 <- length(box1)
+  l2 <- (l1- sample_number)+1
+  Expression_value <- box1[l2:l1,]
+  
+
+  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values",
+          col = 0)
+  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+```
+
+\pagebreak
+
+###### Boxplot cis nominal non-FDR dummy 
+
+```{bash echo=FALSE}
+#wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
+```
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+
+library(vcfR)
+library(knitr)
+library(readr)
 
 cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the variant is the top variant in cis` ==1)
 cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
-cis_nominal_top10 <- cis_nominal_top10[1:20,]
+cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
 vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
-
 vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
-
-
 ##We import the RPKM_d
 
 rownames(RPKM_all_bed_d) <- RPKM_all_bed_d$gene
@@ -768,7 +716,74 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-## Cis Permutations Pass
+
+\pagebreak
+
+###### Boxplot cis nominal FDR dummy 
+
+```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+
+library(vcfR)
+library(knitr)
+library(readr)
+
+cis_nominal_top <- subset(cis_nominals_FDR, cis_nominals_FDR$`flag equal to 1 is the variant is the top variant in cis` ==1)
+cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
+cis_nominal_top10 <- cis_nominal_top10[1:16,]
+
+vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf<- data.frame(cbind(vcf@fix,vcf@gt))
+rownames(vcf) <- vcf$ID
+vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
+vcf_top10_cis_nomial <- vcf_top10_cis_nomial[!duplicated(vcf_top10_cis_nomial$ID),]
+##We import the RPKM_d
+
+rownames(RPKM_all_bed_d) <- RPKM_all_bed_d$gene
+RPKM_top10_cis_nomial <- RPKM_all_bed_d[cis_nominal_top10$`phenotype ID`,]
+rownames(RPKM_top10_cis_nomial) <- RPKM_top10_cis_nomial$gene 
+
+merge1 <- (merge(cis_nominal_top10, vcf_top10_cis_nomial, by = 'ID'))
+merge1 <- merge1[,-(3:21)]
+
+merge2 <- (merge(merge1, RPKM_top10_cis_nomial, 
+                 by.x = "phenotype ID" , 
+                 by.y ='gene',
+                 all.y = F))
+merge2_Genes_SNPs <-  c(paste(merge2$`phenotype ID`,merge2$ID))
+rownames(merge2) <- merge2_Genes_SNPs
+merge2 <- merge2[,-(1:3)]
+
+
+par(mfrow=c(1,4))
+
+for (a in merge2_Genes_SNPs) {
+  sample_number <- (ncol(RPKM_all_bed_d)-6)
+  box1 <- t(merge2[a,])
+  Genotype <- box1[c(1:sample_number),]
+  Genotype <- as.data.frame(Genotype)
+  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  l1 <- length(box1)
+  l2 <- (l1- sample_number)+1
+  Expression_value <- box1[l2:l1,]
+  
+
+  boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
+          main = a,
+          xlab = "Genotype",
+          ylab = "Expression Values",
+          col = 0)
+  stripchart(Expression_value~as.matrix(Genotype), vertical = TRUE, 
+    method = "jitter", add = TRUE, pch = 20, col = 'blue')
+}
+
+
+
+```
+
+\pagebreak
+
+#### Cis Permutations Pass
+
 
 ```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -805,7 +820,7 @@ colnames_cis_permutation <- c("phenotype ID",
 
 colnames(cis_permutation) <- colnames_cis_permutation
 
-par(mfrow = c(1,4))
+par(mfrow = c(1,3))
 
 a <- as.matrix((cis_permutation[,19]))
 b <- as.matrix((cis_permutation[,18]))
@@ -867,39 +882,27 @@ colnames(cis_permutation_FDR) <- c("phenotype ID",
                                    "beta distribution P-value",
                                    "q-value")
 
+
 ```
 
 
-```{r echo=FALSE, fig.height=4, fig.width=12, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-library(knitr)
-library(readr)
-library(kableExtra)
-
-par(mfrow = c(1,2))
-
-plot(density(cis_permutation_FDR$`q-value`),
-  frame = F,
-  col = "blue",
-  main = "PDF of the beta-dist p-value with the FDR applied")
-hist(cis_permutation_FDR$`q-value`,
-     main = "Histogram of the beta-dist p-value with the FDR applied",
-     col = "blue")
-
-rr <- cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]
-
-rr <- rr[,-(12:15)] 
-rr <- rr[,-(2)] 
-knitr::kable(rr[1:20,]) %>% 
+knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),],
+             col.names = c(1:20)) %>% 
   kable_styling(font_size = 6,
-                full_width = T,
-                fixed_thead = F,
+                full_width = F,
+                fixed_thead = T,
                 latex_options = "scale_down") %>% kableExtra::landscape()
 
 
 ```
 
-### Non-Dummy Data without FRD Correction
+
+
+\pagebreak
+
+##### Non-Dummy Data without FRD Correction
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -960,8 +963,9 @@ for (a in merge2_Genes_SNPs) {
 
 
 ```
+\pagebreak
 
-### Non-Dummy Data with FRD Correction
+##### Non-Dummy Data with FRD Correction
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -1028,8 +1032,9 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-### Dummy Data without FRD Correction
+\pagebreak
 
+##### Dummy Data without FRD Correction
 
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
@@ -1074,12 +1079,11 @@ for (a in merge2_Genes_SNPs) {
   box1 <- t(merge2[a,])
   Genotype <- box1[c(1:sample_number),]
   Genotype <- as.data.frame(Genotype)
-  Genotype$Genotype[Genotype$Genotype == "0|1"] <- "1|0"
+  Genotype$Genotype[Genotype$Genotype == "1|0"] <- "0|1"
+  Genotype <- as.matrix(Genotype)
   l1 <- length(box1)
   l2 <- (l1- sample_number)+1
   Expression_value <- box1[l2:l1,]
-  
-
   boxplot(as.numeric(Expression_value)~as.matrix(Genotype),
           main = a,
           xlab = "Genotype",
@@ -1091,8 +1095,9 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
+\pagebreak
 
-### Dummy Data without FRD Correction
+##### Dummy Data without FRD Correction
 
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
@@ -1160,9 +1165,9 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
+\pagebreak
 
-
-## Trans nominal
+#### Trans nominal
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -1170,6 +1175,7 @@ library(knitr)
 library(readr)
 library(qvalue)
 home <- getwd()
+
 Results_trans<- file.path(home,"Results/trans")
 
 
@@ -1231,7 +1237,7 @@ hist(as.matrix(trans_nominal_hits[,7]),
 ```
 
 
-```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r echo=FALSE, fig.height=4, fig.width=8, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 par(mfrow=c(2,4))
 
@@ -1243,16 +1249,18 @@ plot(trans_nominals_FDR,
 
 ```{r echo=FALSE}
 
-knitr::kable(trans_nominal_hits[1:20,])%>%
-kable_styling(bootstrap_options = "striped", 
-              font_size = 7,
-              full_width = T,
-              fixed_thead = T)
+knitr::kable(trans_nominal_hits[1:20,],
+             col.names = c(1:9)) %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down") %>% kableExtra::landscape()
 
 ```
 
+\pagebreak
 
-## Trans permutatios pass
+#### Trans permutatios pass
 
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
@@ -1290,6 +1298,95 @@ colnames(trans_permutation_hits) <- c(" Phenotype ID",
                                   "Dummy",
                                   "Regression slope")
 
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(trans_permutation_hits[1:20,],
+             col.names = c(1:9)) %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down") %>% kableExtra::landscape()
+```
+
+\pagebreak
+
+### fdensity
+
+```{r echo=FALSE, fig.height=4, fig.width=6, message=FALSE, warning=FALSE}
+
+library(knitr)
+library(readr)
+home <- getwd()
+Results_fdensity<- file.path(home,"Results/fdensity")
+setwd(Results_fdensity)
+
+D <-  read_table2("density.TF.around.QTL.txt", 
+    col_names = FALSE)
+
+plot((D$X1+D$X2)/2, D$X3, type="l", xlab="Distance to QTLs", ylab="#annotations/kb") 
 
 ```
+
+### fenrich
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+library(readr)
+home <- getwd()
+Results_fenrich<- file.path(home,"Results/fenrich")
+setwd(Results_fenrich)
+D <- read_table2("enrichement.QTL.in.TF.txt", col_names = FALSE)
+
+knitr::kable(D,             col.names = c(1:8),
+             caption = "
+    1. observed number of QTLs falling within the functional annotations
+    2. total number of QTLs
+    3. mean expected number of QTLs falling within the functional annotations (across multiple permutations, see below)
+    4. standard deviation of the expected number of QTLs falling within the functional annotations (across multiple permutations, see below)
+    5-8. dummy fields
+") %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down")
+fisher.test(matrix(c(D$X1, D$X2, round(D$X3), D$X2), ncol=2))
+
+```
+
+### rtc
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+library(readr)
+home <- getwd()
+Results_rtc<- file.path(home,"Results/rtc")
+setwd(Results_rtc)
+rtc_results <- read_table2("rtc_results.txt")
+
+head(rtc_results)
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
