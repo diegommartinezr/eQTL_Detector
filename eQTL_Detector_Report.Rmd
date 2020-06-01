@@ -6,9 +6,9 @@ output:
   pdf_document: default
 ---
 
-#### QC on the sequence data
+### QC on the sequence data
 
-```{r QTLtools_bamstat, echo=FALSE, fig.height=4, fig.width=18, warning=FALSE, fig.cap= "Quality check on sequence data"}
+```{r QTLtools_bamstat, echo=FALSE, fig.height=3.8, fig.width=20, warning=FALSE, fig.cap= "Quality check on sequence data"}
 library(readr)
 library(kableExtra)
 
@@ -122,7 +122,7 @@ abline(lm(Results_bamstat$`Number of anotations`~ Results_bamstat$`Number of cov
 
 \pagebreak
 
-#### Matching data.
+### Matching data.
 
 This step is to make sure the good matching between the sequence (phenotype) and the genotyping data.
 
@@ -169,9 +169,9 @@ for (d in list_mbv) {
 
 \pagebreak
 
-#### Quantification
+### Quantification
 
-```{r quan, echo=FALSE, fig.height=8, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Boxplot of the experesion in terms of RPKM for all regios, linear (top) log_10 (down)"}
+```{r quan, echo=FALSE, fig.cap="Boxplot of the experesion in terms of RPKM for all regios", fig.height=16, fig.width=16, message=FALSE, warning=FALSE}
 
 library(readr)
 library(kableExtra)
@@ -187,22 +187,40 @@ RPKM_all_bed <- read_table2("RPKM_all_sorted.bed.gz")
 length_samples <- length(RPKM_all_bed[1,])
 length_samples <- length_samples-7
 
-par(mfrow = c(2,1))
+par(mfrow = c(4,1))
 
 boxplot(RPKM_all_bed[,7:length_samples],
         xlab = "Samples",
         main = "Boxplot of RPKM on non-standarized samples")
 
+dens <- apply(RPKM_all_bed[,7:length_samples], 
+              2, density)
+
+
+plot(NA, xlim= c(0,1000), 
+     ylim=range(sapply(dens, "[", "y")),
+     main = "PDF of RPKM for all samples")
+res <- capture.output(mapply(lines, dens, col=1:length(dens)))
+
+
 boxplot(-log10(RPKM_all_bed[,7:length_samples]),
         xlab = "Samples",
         main = "Boxplot of - log_10 of  RPKM")
 
-```
+dens <- apply(-log10(RPKM_all_bed[,7:length_samples]), 
+              2, density,
+              na.rm = T)
 
+plot(NA, xlim= c(0,1), ylim= c(0,0.06),
+     main = "PDF of -log_10 RPKM for all samples")
+res <- capture.output(mapply(lines, dens, col=1:length(dens)))
+
+```
 
 \pagebreak
 
-#### PCA on Genotypes
+### PCA on Genotypes
+
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Biplot using the PC1 and PC2 for the Genotypes (left), scree plot of all components (midle) and cumulative prediction by using different components "}
 
@@ -276,7 +294,7 @@ plot(cumm_comp, type = "o",
 
 ```
 
-#### PCA on gene expression
+### PCA on gene expression
 
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE, fig.cap= "Biplot using the PC1 and PC2 for the gene expression (left), scree plot of all components (midle) and cumulative prediction by using different components"}
@@ -422,10 +440,11 @@ cis_nominals_FDR$`nominal P-value` <- FDR_cis_nomial[["qvalues"]]
 cis_nominals_FDR <- cis_nominals_FDR[order(cis_nominals_FDR$`nominal P-value`),]
 
 ```
-#### Cis Nominal
-##### FDR Correction on nominal p-values
+### Cis Nominal
 
-```{r echo=FALSE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE}
+#### FDR Correction on nominal p-values
+
+```{r echo=FALSE, fig.height=3.5, fig.width=8, message=FALSE, warning=FALSE, fig.cap= "FDR statistics from the qvalue packages"}
 
 plot(FDR_cis_nomial,
      cex.axis = 0.8,
@@ -517,13 +536,12 @@ knitr::kable(cis_nominals_FDR[1:30,], col.names = c(1:14),
 ```
 
 
-##### Expression level forsignificant variants
+### Expression level forsignificant variants
 
 At this point in the analysis we will use two different sets to plot the effect on genotype on the gene expression, one with a subset on the chromosome 22 of 40 Geuvadis samples, to test how the pipeline is moving from the different steps, and the dummy data provided by QTLtools developers.
 
-###### Boxplot cis nominal non-FDR
 
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -583,11 +601,8 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-\pagebreak
 
-###### Boxplot cis nominal FDR
-
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -644,10 +659,6 @@ for (a in merge2_Genes_SNPs) {
 }
 
 ```
-
-\pagebreak
-
-###### Boxplot cis nominal non-FDR dummy 
 
 ```{bash echo=FALSE}
 #wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
@@ -658,7 +669,7 @@ library(readr)
 RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
 ```
 
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -716,10 +727,6 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-
-\pagebreak
-
-###### Boxplot cis nominal FDR dummy 
 
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 
@@ -782,7 +789,7 @@ for (a in merge2_Genes_SNPs) {
 
 \pagebreak
 
-#### Cis Permutations Pass
+### Cis Permutations Pass
 
 
 ```{r echo=FALSE, fig.height=4.5, fig.width=18, message=FALSE, warning=FALSE}
@@ -857,7 +864,8 @@ d<- read_table2("permutation.txt",
 d=d[!is.na(d$X19),]
 
 d$qval=qvalue(d$X19)$qvalue
-hist(d$qval, col = "green")
+hist(d$qval, col = "green",
+     xlab = "q-value")
 
 cis_permutation_FDR <- d
 
@@ -888,8 +896,32 @@ colnames(cis_permutation_FDR) <- c("phenotype ID",
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),],
-             col.names = c(1:20)) %>% 
+ww <- cis_permutation[order(cis_permutation$`beta distribution P-value`),]
+
+ww  <- ww[c(1:30),]
+
+knitr::kable(ww,
+             col.names = c(1:19),
+             caption = "
+    1. The phenotype ID
+    2. The chromosome ID of the phenotype
+    3. The start position of the phenotype
+    4. The end position of the phenotype
+    5. The strand orientation of the phenotype
+    6. The total number of variants tested in cis
+    7. The distance between the phenotype and the tested variant (accounting for strand orientation)
+    8. The ID of the top variant
+    9. The chromosome ID of the top variant
+    10. The start position of the top variant
+    11. The end position of the top variant
+    12. The number of degrees of freedom used to compute the P-values
+    13. Dummy
+    14. The first parameter value of the fitted beta distribution
+    15. The second parameter value of the fitted beta distribution (it also gives the effective number of independent tests in the region)
+    16. The nominal P-value of association between the phenotype and the top variant in cis
+    17. The corresponding regression slope
+    18. The P-value of association adjusted for the number of variants tested in cis given by the direct method (i.e. empirircal P-value)
+    19. The P-value of association adjusted for the number of variants tested in cis given by the fitted beta distribution. We strongly recommend to use this adjusted P-value in any downstream analysis" ) %>% 
   kable_styling(font_size = 6,
                 full_width = F,
                 fixed_thead = T,
@@ -899,12 +931,47 @@ knitr::kable(cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),],
 ```
 
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+
+ww <- cis_permutation_FDR[order(cis_permutation_FDR$`q-value`),]
+ww  <- ww[c(1:30),]
+
+knitr::kable(ww,
+             col.names = c(1:20),
+             caption = "
+    1. The phenotype ID
+    2. The chromosome ID of the phenotype
+    3. The start position of the phenotype
+    4. The end position of the phenotype
+    5. The strand orientation of the phenotype
+    6. The total number of variants tested in cis
+    7. The distance between the phenotype and the tested variant (accounting for strand orientation)
+    8. The ID of the top variant
+    9. The chromosome ID of the top variant
+    10. The start position of the top variant
+    11. The end position of the top variant
+    12. The number of degrees of freedom used to compute the P-values
+    13. Dummy
+    14. The first parameter value of the fitted beta distribution
+    15. The second parameter value of the fitted beta distribution (it also gives the effective number of independent tests in the region)
+    16. The nominal P-value of association between the phenotype and the top variant in cis
+    17. The corresponding regression slope
+    18. The P-value of association adjusted for the number of variants tested in cis given by the direct method (i.e. empirircal P-value)
+    19. The P-value of association adjusted for the number of variants tested in cis given by the fitted beta distribution. We strongly recommend to use this adjusted P-value in any downstream analysis
+    20. q-value") %>%  
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down") %>% kableExtra::landscape()
+
+
+```
+
 
 \pagebreak
 
-##### Non-Dummy Data without FRD Correction
-
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -963,11 +1030,9 @@ for (a in merge2_Genes_SNPs) {
 
 
 ```
-\pagebreak
 
-##### Non-Dummy Data with FRD Correction
 
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -1032,12 +1097,7 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-\pagebreak
-
-##### Dummy Data without FRD Correction
-
-
-```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
+```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
 
 library(vcfR)
 library(knitr)
@@ -1165,9 +1225,7 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-\pagebreak
-
-#### Trans nominal
+### Trans nominal and permutatios pass
 
 ```{r echo=FALSE, fig.height=4, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -1236,7 +1294,6 @@ hist(as.matrix(trans_nominal_hits[,7]),
 
 ```
 
-
 ```{r echo=FALSE, fig.height=4, fig.width=8, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 par(mfrow=c(2,4))
@@ -1250,18 +1307,26 @@ plot(trans_nominals_FDR,
 ```{r echo=FALSE}
 
 knitr::kable(trans_nominal_hits[1:20,],
-             col.names = c(1:9)) %>% 
+             col.names = c(1:9),
+             caption = "Hits on trans nominal pass.    
+    1. Phenotype ID
+    2. Phenotype chrID
+    3. Phenotype start
+    4. Variant ID
+    5. Variant chrID
+    6. Variant position
+    7. Nominal P-value of association
+    8. Dummy here. Field used in approximated mapping in trans
+    9. Regression slope
+") %>% 
   kable_styling(font_size = 6,
                 full_width = F,
                 fixed_thead = T,
                 latex_options = "scale_down") %>% kableExtra::landscape()
 
+
+
 ```
-
-\pagebreak
-
-#### Trans permutatios pass
-
 
 ```{r echo=FALSE, fig.height=5, fig.width=16, message=FALSE, warning=FALSE}
 
@@ -1300,17 +1365,28 @@ colnames(trans_permutation_hits) <- c(" Phenotype ID",
 
 ```
 
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::kable(trans_permutation_hits[1:20,],
-             col.names = c(1:9)) %>% 
+             col.names = c(1:9),
+             caption = "Hits on trans permutation pass.    
+    1. Phenotype ID
+    2. Phenotype chrID
+    3. Phenotype start
+    4. Variant ID
+    5. Variant chrID
+    6. Variant position
+    7. Nominal P-value of association
+    8. Dummy here. Field used in approximated mapping in trans
+    9. Regression slope") %>% 
   kable_styling(font_size = 6,
                 full_width = F,
                 fixed_thead = T,
                 latex_options = "scale_down") %>% kableExtra::landscape()
-```
 
-\pagebreak
+
+
+
+```
 
 ### fdensity
 
@@ -1350,7 +1426,7 @@ knitr::kable(D,             col.names = c(1:8),
   kable_styling(font_size = 6,
                 full_width = F,
                 fixed_thead = T,
-                latex_options = "scale_down")
+                latex_options = "scale_down") %>% kableExtra::landscape()
 fisher.test(matrix(c(D$X1, D$X2, round(D$X3), D$X2), ncol=2))
 
 ```
@@ -1365,28 +1441,34 @@ Results_rtc<- file.path(home,"Results/rtc")
 setwd(Results_rtc)
 rtc_results <- read_table2("rtc_results.txt")
 
-head(rtc_results)
 
-
-
+knitr::kable(rtc_results[1:30,], col.names = c(1:22),caption = "Overlat GWAS hits with eQTL's.
+    1. GWAS variant
+    2. eQTL variant
+    3. Gene
+    4. Gene Group
+    5. GWAS variant chromosome
+    6. GWAS variant position
+    7. GWAS variant rank
+    8. eQTL variant chromosome
+    9. eQTL variant position
+    10. eQTL variant rank
+    11. Gene chromosome
+    12. Gene position
+    13. Distance between variants
+    14. Distance between GWAS and phenotype
+    15. GWAS variant's region index
+    16. eQTL variant's region index
+    17. Region start
+    18. Region end
+    19. Number of variants in the region
+    20. RTC
+    21. D prime
+    22. R squared") %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down" ) %>% kableExtra::landscape()
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
