@@ -453,8 +453,8 @@ plot(FDR_cis_nomial,
 ```
 
 ```{bash eval=FALSE, include=FALSE}
-#mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
-#mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
+mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
+mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
 ```
 
 
@@ -661,7 +661,7 @@ for (a in merge2_Genes_SNPs) {
 ```
 
 ```{bash echo=FALSE}
-#wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
+wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
