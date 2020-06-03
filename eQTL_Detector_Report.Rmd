@@ -552,7 +552,7 @@ cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the var
 cis_nominal_top10 <- cis_nominal_top[order(cis_nominal_top$`nominal P-value`),] 
 cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
-vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Genotypes.vcf", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
