@@ -6,7 +6,11 @@ output:
   pdf_document: default
 ---
 
-### QC on the sequence data
+### QC on the sequence data [bamstat]
+
+QTLtools include a fast an eficient wat to 
+
+
 
 ```{r QTLtools_bamstat, echo=FALSE, fig.height=3.8, fig.width=20, warning=FALSE, fig.cap= "Quality check on sequence data"}
 library(readr)
@@ -452,13 +456,6 @@ plot(FDR_cis_nomial,
 
 ```
 
-```{bash eval=FALSE, include=FALSE}
-mv /home/rstudio/Bed-Seq/Genotypes.vcf /home/rstudio/Genotypes.vcf
-mv /home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz /home/rstudio/genotypes.chr22.vcf.gz
-```
-
-
-
 ```{r echo=FALSE, fig.height=4, fig.width=18, message=FALSE, warning=FALSE}
 par(mfrow = c(1,3))
 
@@ -513,7 +510,8 @@ hist(cis_nominals_FDR$`nominal P-value`,
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 knitr::kable(cis_nominals_FDR[1:30,], col.names = c(1:14),
-             caption = "List of to 30 cis eQTLs mapped using nominal pass and the FDR, the columns are,
+             caption = 
+             "List of to 30 cis eQTLs mapped using nominal pass and the FDR, the columns are,
     1. The phenotype ID,
     2. The chromosome ID of the phenotype,
     3. The start position of the phenotype,
@@ -552,7 +550,7 @@ cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the var
 cis_nominal_top10 <- cis_nominal_top[order(cis_nominal_top$`nominal P-value`),] 
 cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
-vcf <- read.vcfR("/home/rstudio/Genotypes.vcf", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/Genotypes.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
@@ -612,7 +610,7 @@ cis_nominal_top <- subset(cis_nominals_FDR, cis_nominals_FDR$`flag equal to 1 is
 cis_nominal_top10 <- cis_nominal_top[order(cis_nominal_top$`nominal P-value`),] 
 cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
-vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/Genotypes.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
@@ -660,13 +658,9 @@ for (a in merge2_Genes_SNPs) {
 
 ```
 
-```{bash echo=FALSE}
-wget http://jungle.unige.ch/QTLtools_examples/genes.50percent.chr22.bed.gz
-```
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)
-RPKM_all_bed_d <- read_table2("genes.50percent.chr22.bed.gz")
+RPKM_all_bed_d <- read_table2("/home/rstudio/Bed-Seq/genes.50percent.chr22.bed.gz")
 ```
 
 ```{r fig.height=4, fig.width=18, message=FALSE, warning=FALSE, include=FALSE}
@@ -679,7 +673,7 @@ cis_nominal_top <- subset(cis_nominals, cis_nominals$`flag equal to 1 is the var
 cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
 cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
-vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
@@ -738,7 +732,7 @@ cis_nominal_top <- subset(cis_nominals_FDR, cis_nominals_FDR$`flag equal to 1 is
 cis_nominal_top10 <- cis_nominal_top [order(cis_nominal_top$`nominal P-value`),] 
 cis_nominal_top10 <- cis_nominal_top10[1:16,]
 
-vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_nomial <- vcf[cis_nominal_top10$ID,]
@@ -981,7 +975,7 @@ library(readr)
 cis_permutation_top10 <- cis_permutation[order(cis_permutation$`beta distribution P-value`),] 
 cis_permutation_top10 <- cis_permutation_top10[1:20,]
 
-vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/Genotypes.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_permutation <- vcf[cis_permutation_top10$ID,]
@@ -1047,7 +1041,7 @@ cis_permutation$`beta distribution P-value` <- q_value_cis_permutation[["qvalues
 cis_permutation_top10 <- cis_permutation[order(cis_permutation$`beta distribution P-value`),] 
 cis_permutation_top10 <- cis_permutation_top10[1:20,]
 
-vcf <- read.vcfR("Genotypes.vcf", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/Genotypes.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_permutation <- vcf[cis_permutation_top10$ID,]
@@ -1107,7 +1101,7 @@ library(readr)
 cis_permutation_top10 <- cis_permutation[order(cis_permutation$`beta distribution P-value`),] 
 cis_permutation_top10 <- cis_permutation_top10[1:20,]
 
-vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_permutation <- vcf[cis_permutation_top10$ID,]
@@ -1175,7 +1169,7 @@ cis_permutation$`beta distribution P-value` <- q_value_cis_permutation[["qvalues
 cis_permutation_top10 <- cis_permutation[order(cis_permutation$`beta distribution P-value`),] 
 cis_permutation_top10 <- cis_permutation_top10[1:20,]
 
-vcf <- read.vcfR("genotypes.chr22.vcf.gz", verbose = FALSE )
+vcf <- read.vcfR("/home/rstudio/Bed-Seq/genotypes.chr22.vcf.gz", verbose = FALSE )
 vcf<- data.frame(cbind(vcf@fix,vcf@gt))
 rownames(vcf) <- vcf$ID
 vcf_top10_cis_permutation <- vcf[cis_permutation_top10$ID,]
