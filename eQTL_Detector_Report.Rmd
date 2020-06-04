@@ -1465,4 +1465,3 @@ knitr::kable(rtc_results[1:30,], col.names = c(1:22),caption = "Overlat GWAS hit
                 latex_options = "scale_down" ) %>% kableExtra::landscape()
 
 ```
-
