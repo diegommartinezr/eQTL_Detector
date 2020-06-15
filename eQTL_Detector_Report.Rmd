@@ -1465,3 +1465,47 @@ knitr::kable(rtc_results[1:30,], col.names = c(1:22),caption = "Overlat GWAS hit
                 latex_options = "scale_down" ) %>% kableExtra::landscape()
 
 ```
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+home <- getwd()
+fine_mapping_set <- file.path(home,"/Results/cis_nominal")
+setwd(fine_mapping_set)
+
+library(readr)
+library(data.table)
+library(dplyr)
+
+#I'm gonna use the nominal poss table to get more slopes for the same gene
+
+tb <- read_table2("nominals.txt", 
+    col_names = FALSE)
+
+vector_CAVIAR <- as.matrix(cis_permutation_top10[1:20,1])
+
+tb <- as.data.frame(tb[,c(1,8,12,13)])
+colnames(tb) <- c("pheno_id", "var_id", "pv", "slope")
+tb <- subset(tb, pheno_id == vector_CAVIAR[1]) 
+tb <- tb[order(tb$pv), ]
+tb <- tb[1:100,]
+tb$Z <- qnorm(tb$pv, lower.tail = FALSE)*sign(tb$slope)
+tb <- subset(tb, select = c("var_id", "Z"))
+write.table(tb, "aa1.txt", sep = "\t", col.names = FALSE, row.names = FALSE, quote = FALSE)
+
+
+```
+
+
+
+
+
+
