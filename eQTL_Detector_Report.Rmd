@@ -1468,41 +1468,115 @@ knitr::kable(rtc_results[1:30,], col.names = c(1:22),caption = "Overlat GWAS hit
 
 
 
-
-
-
-
-
-
-
-```{r}
-
-home <- getwd()
-fine_mapping_set <- file.path(home,"/Results/cis_nominal")
-setwd(fine_mapping_set)
-
+```{r echo=FALSE, fig.height=10, fig.width=20, message=FALSE, warning=FALSE}
+library(knitr)
 library(readr)
-library(data.table)
-library(dplyr)
+library(kableExtra)
+home <- getwd()
+Results_rtc<- file.path(home,"Results/rtc")
+setwd(Results_rtc)
+rtc_results <- read_table2("rtc_results.txt")
 
-#I'm gonna use the nominal poss table to get more slopes for the same gene
+knitr::kable(rtc_results[1:30,], col.names = c(1:22),caption = "Overlat GWAS hits with eQTL's.
+    1. GWAS variant
+    2. eQTL variant
+    3. Gene
+    4. Gene Group
+    5. GWAS variant chromosome
+    6. GWAS variant position
+    7. GWAS variant rank
+    8. eQTL variant chromosome
+    9. eQTL variant position
+    10. eQTL variant rank
+    11. Gene chromosome
+    12. Gene position
+    13. Distance between variants
+    14. Distance between GWAS and phenotype
+    15. GWAS variant's region index
+    16. eQTL variant's region index
+    17. Region start
+    18. Region end
+    19. Number of variants in the region
+    20. RTC
+    21. D prime
+    22. R squared") %>% 
+  kable_styling(font_size = 6,
+                full_width = F,
+                fixed_thead = T,
+                latex_options = "scale_down" ) %>% kableExtra::landscape()
 
-tb <- read_table2("nominals.txt", 
-    col_names = FALSE)
 
-vector_CAVIAR <- as.matrix(cis_permutation_top10[1:20,1])
+download.file("https://www.ebi.ac.uk/gwas/api/search/downloads/full", destfile ="GWAS_Hits.txt", method = "auto", quiet = FALSE, mode = "w",cacheOK = TRUE)
 
-tb <- as.data.frame(tb[,c(1,8,12,13)])
-colnames(tb) <- c("pheno_id", "var_id", "pv", "slope")
-tb <- subset(tb, pheno_id == vector_CAVIAR[1]) 
-tb <- tb[order(tb$pv), ]
-tb <- tb[1:100,]
-tb$Z <- qnorm(tb$pv, lower.tail = FALSE)*sign(tb$slope)
-tb <- subset(tb, select = c("var_id", "Z"))
-write.table(tb, "aa1.txt", sep = "\t", col.names = FALSE, row.names = FALSE, quote = FALSE)
+GWAS_Hits <- read_delim("GWAS_Hits.txt", 
+    "\t", escape_double = FALSE, col_types = cols(CHR_POS = col_number()), 
+    trim_ws = TRUE)
+sub_GWAS_Hits <- subset(GWAS_Hits, GWAS_Hits$CHR_ID == 22 )
+
+
+rtc_results <- rtc_results[order(rtc_results$RTC),] 
+top_rtc_table <- subset(rtc_results, rtc_results$RTC > 0.9)
+
+
+rtc_variants <- make.names(top_rtc_table$our_variant_start,unique = TRUE)
+rownames(top_rtc_table) <- rtc_variants
+
+GWAS_names <- make.names(sub_GWAS_Hits$CHR_POS, unique = TRUE)
+rownames(sub_GWAS_Hits) <- GWAS_names
+
+sub_GWAS_Hits[rownames(top_rtc_table),]
+rownames(sub_GWAS_Hits)
+rownames(top_rtc_table)
+
+
+write.table(top_rtc_table, file = "GWAS3.txt",
+            sep = " ")
+
+
+aa <- sub_GWAS_Hits[!duplicated(sub_GWAS_Hits$CHR_POS), ]
+rownames(aa) <- aa$CHR_POS
+
+### Plot
+
+color <- data.frame(rtc_results$RTC > 0.9)
+
+par(mfrow=c(2,1))
+
+plot(rtc_results$RTC,
+     c(rtc_results$our_variant_start- rtc_results$other_variant_start),
+     type = "h",
+     ylab = "Distances from the GWAS hit",
+     xlab = "RTC value")
+points(rtc_results$RTC,c(rtc_results$our_variant_start- rtc_results$other_variant_start),
+       col= "red",
+       pch = 16,
+       cex = 0.7)
+abline(h=0)
+
+
+rbPal <- colorRampPalette(c('red','blue'))
+col <- rbPal(10)[as.numeric(cut(rtc_results$RTC,breaks = 10))]
+
+
+plot(rtc_results$our_variant_start,
+     c(rtc_results$our_variant_start- rtc_results$other_variant_start),
+     type = "h",
+     ylab = "Distances from the GWAS hit",
+     xlab = "Chromosome possition")
+points(rtc_results$our_variant_start,
+       c(rtc_results$our_variant_start- rtc_results$other_variant_start),
+       col= col,
+       pch = 16,
+       cex = 1)
+abline(h=0)
 
 
 ```
+
+
+
+
+
 
 
 
