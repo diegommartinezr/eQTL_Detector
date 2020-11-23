@@ -38,7 +38,7 @@ docker-compose version 1.21.2, build a133471
 wget https://github.com/diegommartinezr/eQTL_Detector/archive/master.zip
 ```
 
-### In case you have the usermode issue you need use
+### In case you have the usermode issue you need to use
 
 ```
 sudo usermode -aG docker ${USER}
